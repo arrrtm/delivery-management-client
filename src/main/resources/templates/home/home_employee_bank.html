@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <title>Главное меню</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <div th:insert="main :: head"></div>
+</head>
+<body>
+<div th:insert="main :: nav-main"></div>
+<hr>
+<div class="container bg-dark text-light pt-3 pb-3 rounded-3">
+    <div class="row">
+        <div class="col-4"></div>
+        <div class="col-4 d-grid gap-2">
+            <a th:href="@{/users/couriers}" class="btn btn-danger">Управление курьерами</a>
+        </div>
+        <div class="col-4"></div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-4"></div>
+        <div class="col-4 d-grid gap-2">
+            <a th:href="@{/users/employees}" class="btn btn-danger">Управление сотрудниками филиалов</a>
+        </div>
+        <div class="col-4"></div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-4"></div>
+        <div class="col-4 d-grid gap-2">
+            <a th:href="@{/bank/orders}" class="btn btn-danger">Управление заказами</a>
+        </div>
+        <div class="col-4"></div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-4"></div>
+        <div class="col-4 d-grid gap-2">
+            <a th:href="@{/clients}" class="btn btn-danger">Управление клиентами</a>
+        </div>
+        <div class="col-4"></div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-4"></div>
+        <div class="col-4 d-grid gap-2">
+            <button class="btn btn-danger">Просмотр истории заказов</button>
+        </div>
+        <div class="col-4"></div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-4"></div>
+        <div class="col-4 d-grid gap-2">
+            <button class="btn btn-danger">Просмотр статистики по филиалам</button>
+        </div>
+        <div class="col-4"></div>
+    </div>
+</div>
+<hr>
+<div th:insert="main :: footer"></div>
+</body>
+</html>

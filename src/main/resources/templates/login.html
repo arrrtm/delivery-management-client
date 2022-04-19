@@ -1,0 +1,43 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <title>Авторизация</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <div th:insert="main :: head"></div>
+</head>
+<body>
+<div class="container-fluid bg-dark text-center text-light pt-3 pb-3">
+    <h2>Авторизация</h2>
+</div>
+<br>
+<div class="container bg-dark text-light pt-3 pb-3 rounded-3">
+    <hr>
+    <div class="d-flex justify-content-center container-fluid">
+        <img th:src="@{/images/bank.png}" width="150" height="140" alt="Bank" src="#"/>
+    </div>
+    <hr>
+    <form th:action="@{/login}" th:object="${authenticationRequestDTO}" method="POST" autocomplete="off">
+        <div class="form-group d-flex justify-content-center container">
+            <label for="username">Логин:
+                <input type="text" th:field="*{username}" id="username" placeholder="Введите логин" class="form-control"
+                       required/>
+            </label>
+        </div>
+        <br>
+        <div class="form-group d-flex justify-content-center container">
+            <label for="password">Пароль:
+                <input type="password" th:field="*{password}" id="password" placeholder="Введите пароль"
+                       class="form-control" autocomplete="off" required/>
+            </label>
+        </div>
+        <br>
+        <div class="d-flex justify-content-center">
+            <input type="submit" value="Войти в систему" class="btn btn-danger mx-xl-1"/>
+            <a class="btn btn-danger mx-lg-2" th:href="@{/reset}">Забыли пароль?</a>
+        </div>
+        <hr>
+    </form>
+</div>
+<br>
+</body>
+</html>

@@ -1,0 +1,30 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <title>403 - Доступ запрещён</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <div th:insert="main :: head"></div>
+</head>
+<body>
+<div class="container-fluid bg-dark text-center text-light pt-3 pb-3">
+    <h2>Ошибка 403</h2>
+</div>
+<br>
+<div class="container text-dark pt-3 pb-3 rounded-3">
+    <div class="d-flex justify-content-center">
+        <img th:src="@{/images/error.png}" width="200" height="200" alt="Bank" src="#"/>
+    </div>
+    <hr>
+    <div class="container d-flex align-items-center justify-content-center">
+        <div class="alert alert-danger p-2, m-2">Доступ к запрошенному ресурсу запрещен. Недостаточно прав доступа.
+        </div>
+    </div>
+    <hr>
+    <div class="container d-flex align-items-center justify-content-center">
+        <button class="btn btn-danger mx-xl-2" onclick="window.history.back()">&laquo; Назад</button>
+        <a class="btn btn-danger mx-lg-1" th:href="@{/logout}">Авторизация &raquo;</a>
+    </div>
+    <div th:insert="main :: footer"></div>
+</div>
+</body>
+</html>

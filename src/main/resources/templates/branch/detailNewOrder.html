@@ -1,0 +1,106 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <title>Обработка заказа</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <div th:insert="main :: head"></div>
+</head>
+<body>
+<div th:insert="main :: nav-other"></div>
+<div class="container text-center pt-lg-3">
+    <h2>Обработка заказа</h2>
+</div>
+<div class="container pt-lg-3">
+    <hr>
+    <form th:object="${orderDetail}" th:action="@{/change/{path}/ready_from_delivery(path=${orderDetail.id})}"
+          method="POST" autocomplete="off">
+        <div class="container text-center pb-2">
+            <h4><u>Информация по заказу</u></h4>
+        </div>
+        <div class="form-group d-flex justify-content-center container">
+            <label for="number" class="container">Номер заказа:
+                <div type="text" th:text="${orderDetail.id}" id="number" class="form-control"></div>
+            </label>
+            <br>
+            <label for="addressPickup" class="container">Адрес для взятия заказа:
+                <div type="text" th:text="${orderDetail.addressPickup}" id="addressPickup" class="form-control"></div>
+            </label>
+            <br>
+            <label for="addressDelivery" class="container">Адрес для доставки заказа:
+                <div type="text" th:text="${orderDetail.addressDelivery}" id="addressDelivery"
+                     class="form-control"></div>
+            </label>
+            <br>
+        </div>
+        <br>
+        <div class="form-group d-flex justify-content-center container">
+            <label for="typeDelivery" class="container">Тип доставки:
+                <div type="text" th:text="${orderDetail.typeDelivery}" id="typeDelivery" class="form-control"></div>
+            </label>
+            <br>
+            <label for="status" class="container">Текущий статус заказа:
+                <div type="text" th:text="${orderDetail.status}" id="status" class="form-control"></div>
+            </label>
+        </div>
+        <br>
+        <div class="form-group d-flex justify-content-center container">
+            <label for="created" class="container">Дата создания заказа:
+                <div type="text" th:text="${#dates.format(orderDetail.created,'yyyy-MM-dd HH:mm:ss')}" id="created"
+                     class="form-control"></div>
+            </label>
+            <br>
+            <label for="updated" class="container">Дата обновления заказа:
+                <div type="text" th:text="${#dates.format(orderDetail.updated,'yyyy-MM-dd HH:mm:ss')}" id="updated"
+                     class="form-control"></div>
+            </label>
+        </div>
+        <hr>
+        <div class="container text-center pb-2">
+            <h4><u>Информация по карте</u></h4>
+        </div>
+        <div class="form-group d-flex justify-content-center container">
+            <label for="typeCard" class="container">Тип карты:
+                <div type="text" th:text="${orderDetail.card.typeCard}" id="typeCard" class="form-control"></div>
+            </label>
+            <br>
+            <label for="description" class="container">Описание карты:
+                <div type="text" th:text="${orderDetail.card.description}" id="description" class="form-control"></div>
+            </label>
+            <br>
+            <label for="currency" class="container">Доступые типы валют:
+                <div type="text" th:each="currencys: ${orderDetail.card.currency}" th:text="${currencys.name}"
+                     id="currency" class="form-control"></div>
+            </label>
+        </div>
+        <hr>
+        <div class="container text-center pb-2">
+            <h4><u>Информация по клиенту</u></h4>
+        </div>
+        <div class="form-group d-flex justify-content-center container">
+            <label for="clientPin" class="container">ПИН клиента:
+                <div type="text" th:text="${orderDetail.client.clientPin}" id="clientPin" class="form-control"></div>
+            </label>
+            <br>
+            <label for="clientFullName" class="container">ФИО клиента:
+                <div type="text" th:text="${orderDetail.client.clientFullName}" id="clientFullName"
+                     class="form-control"></div>
+            </label>
+            <br>
+            <label for="clientPhoneNumber" class="container">Номер телефона:
+                <div type="text" th:text="${orderDetail.client.clientPhoneNumber}" id="clientPhoneNumber"
+                     class="form-control"></div>
+            </label>
+        </div>
+        <input type="hidden" th:field="*{status}"/>
+        <hr>
+        <div class="d-flex justify-content-center">
+            <input type="submit" value="Изменить статус заказа на 'Готов к выдаче'"
+                   class="btn btn-success border-1 border-dark  mx-xl-2"/>
+            <a class="btn btn-success border-1 border-dark mx-lg-1" onclick="window.history.back()">Вернуться назад</a>
+        </div>
+    </form>
+    <hr>
+</div>
+<br>
+</body>
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <title>Изменение персональной информации</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <div th:insert="main :: head"></div>
+</head>
+<body>
+<div th:insert="main :: nav-other"></div>
+<div class="container text-center pt-lg-3">
+    <h2>Изменение персональной информации</h2>
+</div>
+<div class="container pt-lg-3">
+    <hr>
+    <form th:action="@{/edit/personal}" th:object="${editAccountRequestDTO}" method="POST" autocomplete="off">
+        <div class="form-group d-flex justify-content-center container">
+            <label for="userFullName" class="container">Введите Ваше ФИО:
+                <input type="text" th:field="*{userFullName}" id="userFullName" placeholder="Введите ФИО пользователя"
+                       class="form-control" required/>
+            </label>
+        </div>
+        <br>
+        <div class="form-group d-flex justify-content-center container">
+            <label for="userPhoneNumber" class="container">Введите Ваш номер телефона:
+                <input type="number" th:field="*{userPhoneNumber}" id="userPhoneNumber"
+                       placeholder="Введите номер телефона" class="form-control" required/>
+            </label>
+        </div>
+        <br>
+        <div class="form-group d-flex justify-content-center container">
+            <label for="email" class="container">Введите Вашу электронную почту:
+                <input type="email" th:field="*{email}" id="email" placeholder="Введите электронную почту"
+                       class="form-control" required/>
+            </label>
+        </div>
+        <input type="hidden" th:field="*{status}"/>
+        <hr>
+        <div class="d-flex justify-content-center">
+            <a class="btn btn-danger mx-xl-2" th:href="@{/view}">&laquo; Вернуться в личный кабинет</a>
+            <input type="submit" value="Обновить информацию &raquo;" class="btn btn-danger mx-lg-1"/>
+        </div>
+    </form>
+    <hr>
+</div>
+<div th:insert="main :: footer"></div>
+</body>
+</html>

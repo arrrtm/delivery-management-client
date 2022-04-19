@@ -1,0 +1,58 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <title>Личный кабинет</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <div th:insert="main :: head"></div>
+</head>
+<body>
+<div th:insert="main :: nav-other"></div>
+<div class="container text-center pt-lg-3">
+    <h2>Личный кабинет</h2>
+</div>
+<div class="container pt-lg-3">
+    <hr>
+    <div th:object="${userResponseDTO}">
+        <div class="form-group d-flex justify-content-center container">
+            <label for="userFullName" class="container">ФИО пользователя:
+                <div type="text" th:text="*{userFullName}" id="userFullName" class="form-control"></div>
+            </label>
+            <br>
+            <label for="userPhoneNumber" class="container">Номер телефона:
+                <div type="text" th:text="*{userPhoneNumber}" id="userPhoneNumber" class="form-control"></div>
+            </label>
+            <br>
+            <label for="email" class="container">Электронная почта:
+                <div type="email" th:text="*{email}" id="email" class="form-control"></div>
+            </label>
+        </div>
+        <br>
+        <div class="form-group d-flex justify-content-center container">
+            <a class="btn btn-danger mx-lg-1" th:href="@{/edit/personal}">Изменить персональную информацию</a>
+        </div>
+        <hr>
+        <div class="form-group d-flex justify-content-center container">
+            <label for="role" class="container">Роль в системе:
+                <div type="text" th:text="*{role.name}" id="role" class="form-control"></div>
+            </label>
+            <br>
+            <label for="create" class="container">Дата создания аккаунта:
+                <div type="date" th:text="*{#dates.format(created,'yyyy-MM-dd HH:mm:ss')}" id="create"
+                     class="form-control"></div>
+            </label>
+            <br>
+            <label for="update" class="container">Последнее обновление аккаунта:
+                <div type="date" th:text="*{#dates.format(updated,'yyyy-MM-dd HH:mm:ss')}" id="update"
+                     class="form-control"></div>
+            </label>
+        </div>
+        <br>
+        <div class="d-flex justify-content-center">
+            <a class="btn btn-danger mx-lg-1" th:href="@{/edit/password}">Изменить пароль</a>
+        </div>
+        <hr>
+    </div>
+</div>
+<div th:insert="main :: footer"></div>
+</body>
+</html>
