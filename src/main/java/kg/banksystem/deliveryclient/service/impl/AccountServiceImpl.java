@@ -2,8 +2,8 @@ package kg.banksystem.deliveryclient.service.impl;
 
 import kg.banksystem.deliveryclient.dto.account.request.EditAccountRequestDTO;
 import kg.banksystem.deliveryclient.dto.account.request.ResetPasswordRequestDTO;
-import kg.banksystem.deliveryclient.dto.account.response.LogicalResponseMessageDTO;
 import kg.banksystem.deliveryclient.dto.admin.response.UserResponseMessageDTO;
+import kg.banksystem.deliveryclient.dto.baseresponse.LogicalResponseMessageDTO;
 import kg.banksystem.deliveryclient.service.AccountService;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;

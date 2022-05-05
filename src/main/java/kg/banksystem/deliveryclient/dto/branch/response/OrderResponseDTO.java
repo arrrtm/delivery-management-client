@@ -6,7 +6,7 @@ import kg.banksystem.deliveryclient.dto.bank.response.CardResponseDTO;
 import kg.banksystem.deliveryclient.dto.bank.response.ClientResponseDTO;
 import lombok.Data;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Data
@@ -19,7 +19,7 @@ public class OrderResponseDTO {
     private ClientResponseDTO client;
     private String status;
     private String typeDelivery;
-    private Date created;
-    private Date updated;
+    private LocalDateTime createdDate;
+    private LocalDateTime updatedDate;
     private Set<UserResponseDTO> users;
 }

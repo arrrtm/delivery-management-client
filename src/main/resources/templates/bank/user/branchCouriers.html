@@ -1,0 +1,95 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <title>Курьеры филиалов</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <div th:insert="main :: head"></div>
+</head>
+
+<body>
+<div th:insert="main :: nav-other"></div>
+<div class="container text-center pt-lg-3">
+    <h2>Управление курьерами</h2>
+</div>
+<hr/>
+
+<div class="container">
+    <div class="d-flex flex-row justify-content-between">
+        <div class="block">
+            <div th:if="${userError != true}">
+                <ul class="nav nav-pills">
+                    <li class="nav-item border border-light rounded"
+                        th:each="page : ${#numbers.sequence(0, totalPages)}">
+                        <a th:href="@{/users/(page=${page})}" th:text="${page}" class="nav-link text-dark"
+                           th:classappend="(${currentPage}==${page}?'active bg-danger text-white':'')">
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="block"></div>
+        <div class="block">
+            <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#addModal">Зарегистрировать
+                курьера &#10011;
+            </button>
+        </div>
+    </div>
+</div>
+<hr>
+
+<div class="container-fluid text-center">
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th scope="col">Логин</th>
+            <th scope="col">ФИО пользователя</th>
+            <th scope="col">Номер телефона</th>
+            <th scope="col">Электронная почта</th>
+            <th scope="col">Статус</th>
+            <th scope="col">Дата регистрации</th>
+            <th scope="col">Дата изменения</th>
+            <th scope="col">Прикреплённый филиал</th>
+            <th scope="col">Управление</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="user : ${users}">
+            <td th:text="${user.username}"></td>
+            <td th:text="${user.userFullName}"></td>
+            <td th:text="${user.userPhoneNumber}"></td>
+            <td th:text="${user.email}"></td>
+            <td th:text="${user.status}"></td>
+            <td th:text="${#temporals.format(user.createdDate,'dd-MM-yyyy')}"></td>
+            <td th:text="${#temporals.format(user.updatedDate,'dd-MM-yyyy')}"></td>
+            <td th:each="branch: ${user.branches}" th:text="${branch.name}"></td>
+            <td>
+                <div class="container d-flex flex-row bd-highlight justify-content-center">
+                    <div class="row">
+                        <div class="col-sm">
+                            <a th:href="@{users/detail/(id=${user.id})}"
+                               class="btn btn-link btn-sm text-info editUser" data-bs-toggle="modal"
+                               data-bs-target="#editModal">
+                                <div th:insert="svg :: update"></div>
+                            </a>
+                        </div>
+                        <div class="col-sm">
+                            <div th:insert="admin/user/control :: block"></div>
+                            <div th:insert="admin/user/control :: unblock"></div>
+                        </div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<hr>
+
+<div class="alert alert-danger text-center" th:if="${userError == true}" th:text="${feedback}"></div>
+<br>
+
+<div th:insert="main :: footer"></div>
+<div th:insert="bank/user/add :: addUser"></div>
+<div th:insert="bank/user/edit :: editUser"></div>
+</body>
+</html>

@@ -1,0 +1,117 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <title>Активные заказы филиала</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <div th:insert="main :: head"></div>
+</head>
+
+<body>
+<div th:insert="main :: nav-other"></div>
+<div class="container text-center pt-lg-3">
+    <h2>Обработка активных заказов филиала</h2>
+</div>
+<hr>
+
+<div class="container">
+    <div class="d-flex flex-row justify-content-between">
+        <div class="block">
+            <div th:if="${orderError != true}">
+                <ul class="nav nav-pills">
+                    <li class="nav-item border border-light rounded"
+                        th:each="page : ${#numbers.sequence(0, totalPages)}">
+                        <a th:href="@{/orders/active(page=${page})}" th:text="${page}"
+                           class="nav-link text-dark"
+                           th:classappend="(${currentPage}==${page}?'active bg-danger text-white':'')">
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="block">
+        </div>
+        <div class="block">
+            <div class="row">
+                <form th:action="@{/orders/active}" method="GET">
+                    <label>
+                        <input type="number" id="number" name="number" placeholder="Введите номер заказа"
+                               class="form-control" autocomplete="off">
+                    </label>
+                    <button class="btn btn-danger mb-1" type="submit">Поиск по номеру заказа &raquo;</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<hr>
+
+<div class="container-fluid text-center">
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th scope="col">Номер заказа</th>
+            <th scope="col">Адрес вывоза</th>
+            <th scope="col">Адрес доставки</th>
+            <th scope="col">Тип карты</th>
+            <th scope="col">Тип доставки</th>
+            <th scope="col">ПИН клиента</th>
+            <th scope="col">ФИО клиента</th>
+            <th scope="col">Телефон клиента</th>
+            <th scope="col">Статус заказа</th>
+            <th scope="col">Дата обновления</th>
+            <th scope="col">Обработка заказа</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="order : ${orders}">
+            <td th:text="${order.id}"></td>
+            <td th:text="${order.addressPickup}"></td>
+            <td th:text="${order.addressDelivery}"></td>
+            <td th:text="${order.card.typeCard}"></td>
+            <td th:text="${order.typeDelivery}"></td>
+            <td th:text="${order.client.clientPin}"></td>
+            <td th:text="${order.client.clientFullName}"></td>
+            <td th:text="${order.client.clientPhoneNumber}"></td>
+            <td th:text="${order.status}"></td>
+            <td th:text="${#temporals.format(order.updatedDate,'dd-MM-yyyy')}"></td>
+            <td>
+                <div class="container d-flex flex-row bd-highlight justify-content-center">
+                    <div class="row">
+                        <div class="col-sm me-2 pt-0 p-lg-0">
+                            <a th:href="@{orders/qr/(id=${order.id})}"
+                               class="btn btn-link btn-sm text-input-dialog ps-0 pe-0 qrOrder" data-bs-toggle="modal"
+                               data-bs-target="#orderQRCode">
+                                <div th:insert="svg :: qr"></div>
+                            </a>
+                        </div>
+                        <div class="col-sm me-2 pt-0 p-lg-0">
+                            <a th:href="@{orders/detail/(id=${order.id},requestStatus='new_accepted')}"
+                               class="btn btn-link btn-sm text-info ps-0 pe-0 detailOrder" data-bs-toggle="modal"
+                               data-bs-target="#processingActiveOrder">
+                                <div th:insert="svg :: detail"></div>
+                            </a>
+                        </div>
+                        <div class="col-sm me-2 pt-0 p-lg-0">
+                            <a th:href="@{orders/detail/(id=${order.id},requestStatus='new_accepted')}"
+                               class="btn btn-link btn-sm text-danger ps-0 pe-0 destroyOrder" data-bs-toggle="modal"
+                               data-bs-target="#destroyOrder">
+                                <div th:insert="svg :: destroy"></div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<hr>
+
+<div class="alert alert-danger text-center" th:if="${orderError == true}" th:text="${feedback}"></div>
+<br>
+<div th:insert="main :: footer"></div>
+<div th:insert="branch/order/processing :: processingActiveOrder"></div>
+<div th:insert="branch/order/destroy :: destroyOrder"></div>
+<div th:insert="branch/order/qr ::orderQRCode"></div>
+</body>
+</html>

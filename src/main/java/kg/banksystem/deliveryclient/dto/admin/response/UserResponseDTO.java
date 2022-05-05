@@ -3,7 +3,7 @@ package kg.banksystem.deliveryclient.dto.admin.response;
 import kg.banksystem.deliveryclient.dto.account.response.RoleResponseDTO;
 import lombok.Data;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -14,8 +14,8 @@ public class UserResponseDTO {
     private String userPhoneNumber;
     private String email;
     private String status;
-    private Date created;
-    private Date updated;
+    private LocalDateTime createdDate;
+    private LocalDateTime updatedDate;
     private RoleResponseDTO role;
     private List<BranchResponseDTO> branches;
 }

@@ -9,4 +9,5 @@ public class ListBranchResponseMessageDTO {
     private String message;
     private List<BranchResponseDTO> data;
     private String status;
+    private int totalPages;
 }

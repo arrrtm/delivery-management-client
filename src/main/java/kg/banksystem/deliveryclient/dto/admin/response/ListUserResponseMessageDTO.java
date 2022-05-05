@@ -9,4 +9,5 @@ public class ListUserResponseMessageDTO {
     private String message;
     private List<UserResponseDTO> data;
     private String status;
+    private int totalPages;
 }

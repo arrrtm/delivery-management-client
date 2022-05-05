@@ -25,15 +25,16 @@ public class AuthenticationController {
         this.authenticationService = authenticationService;
     }
 
+    // DONE
     @GetMapping("/")
     public String getLoginPage(Model model) {
         model.addAttribute("authenticationRequestDTO", new AuthenticationRequestDTO());
         return "login";
     }
 
+    // DONE
     @PostMapping("login")
-    public String login(@ModelAttribute("authenticationRequestDTO") AuthenticationRequestDTO authenticationRequestDTO,
-                        HttpServletResponse response, RedirectAttributes redirectAttributes) {
+    public String login(@ModelAttribute("authenticationRequestDTO") AuthenticationRequestDTO authenticationRequestDTO, HttpServletResponse response, RedirectAttributes redirectAttributes) {
         TokenResponseMessageDTO authStatus = authenticationService.getAuthentication(authenticationRequestDTO);
         if (authStatus.getStatus().equals("ERROR")) {
             redirectAttributes.addFlashAttribute("feedback", authStatus.getMessage());

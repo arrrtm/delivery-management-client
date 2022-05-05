@@ -13,7 +13,8 @@
         <script th:src="@{https://code.jquery.com/jquery-3.6.0.min.js}"
                 integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
         <script th:src="@{/libs/toastr.min.js}"></script>
-        <script th:src="@{/libs/notif-config.js}"></script>
+        <script type="text/javascript" th:src="@{../static/js/notif-config.js}"></script>
+        <script type="text/javascript" th:src="@{../static/js/modals.js}"></script>
 
         <script th:inline="javascript">
             $(document).ready(function () {
@@ -25,8 +26,11 @@
                     case 'edit-success':
                     case 'block-success':
                     case 'unblock-success':
+                    case 'sent-to-branch-success':
                     case 'ready-for-delivery-success':
                     case 'destroyed-success':
+                    case 'add-success':
+                    case 'delete-success':
                         toastr.success([[${feedback}]]);
                         break;
                     case 'login-fail':
@@ -35,14 +39,16 @@
                     case 'edit-fail':
                     case 'block-fail':
                     case 'unblock-fail':
+                    case 'sent-to-branch-fail':
                     case 'ready-for-delivery-fail':
                     case 'destroyed-fail':
+                    case 'add-fail':
+                    case 'delete-fail':
                         toastr.error([[${feedback}]]);
                         break;
                 }
             });
         </script>
-
     </div>
     <title></title>
 </head>
@@ -68,7 +74,7 @@
             <div class="btn-group dropstart">
                 <button type="button" class="btn btn-danger dropdown-toggle dropdown-toggle-split"
                         data-bs-toggle="dropdown" aria-expanded="false"></button>
-                <a th:href="@{/view}" type="button" class="btn btn-danger">Личный кабинет</a>
+                <a th:href="@{/view}" type="button" class="btn btn-danger">Личный кабинет &#9776;</a>
                 <ul class="dropdown-menu">
                     <li><a class="dropdown-item" th:href="@{/edit/personal}">Изменение персональной информации</a></li>
                     <li><a class="dropdown-item" th:href="@{/edit/password}">Изменение пароля</a></li>
@@ -96,7 +102,7 @@
             <div class="btn-group dropstart">
                 <button type="button" class="btn btn-danger dropdown-toggle dropdown-toggle-split"
                         data-bs-toggle="dropdown" aria-expanded="false"></button>
-                <a th:href="@{/view}" type="button" class="btn btn-danger">Личный кабинет</a>
+                <a th:href="@{/view}" type="button" class="btn btn-danger">Личный кабинет &#9776;</a>
                 <ul class="dropdown-menu">
                     <li><a class="dropdown-item" th:href="@{/edit/personal}">Изменение персональной информации</a></li>
                     <li><a class="dropdown-item" th:href="@{/edit/password}">Изменение пароля</a></li>

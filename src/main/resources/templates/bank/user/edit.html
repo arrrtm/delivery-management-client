@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <div th:insert="main :: head"></div>
+</head>
+
+<body>
+<div th:fragment="editUser">
+    <div class="customForm">
+        <form th:action="@{/users/edit}" method="POST" autocomplete="off">
+            <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="header" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="header">Изменение пользователя</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="mb-3 d-none">
+                                <label for="id" class="col-form-label">Идентификатор:</label>
+                                <input type="text" name="id" id="id" class="form-control" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="userFullName" class="col-form-label">Введите новое ФИО пользователя:</label>
+                                <input type="text" name="userFullName" id="userFullName" class="form-control"
+                                       required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="userPhoneNumber" class="col-form-label">Введите новый номер телефона
+                                    пользователя:</label>
+                                <input type="text" name="userPhoneNumber" id="userPhoneNumber" class="form-control"
+                                       maxlength="10"
+                                       required oninput="this.value = this.value.replace(/\D/g, '')">
+                            </div>
+                        </div>
+                        <div class="modal-footer justify-content-center">
+                            <input type="submit" value="Изменить пользователя &#9776;" class="btn btn-danger"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

@@ -36,13 +36,13 @@
                 <div type="text" th:text="*{role.name}" id="role" class="form-control"></div>
             </label>
             <br>
-            <label for="create" class="container">Дата создания аккаунта:
-                <div type="date" th:text="*{#dates.format(created,'yyyy-MM-dd HH:mm:ss')}" id="create"
+            <label for="createdDate" class="container">Дата создания аккаунта:
+                <div type="date" th:text="*{#temporals.format(createdDate,'yyyy-MM-dd HH:mm:ss')}" id="createdDate"
                      class="form-control"></div>
             </label>
             <br>
-            <label for="update" class="container">Последнее обновление аккаунта:
-                <div type="date" th:text="*{#dates.format(updated,'yyyy-MM-dd HH:mm:ss')}" id="update"
+            <label for="updatedDate" class="container">Последнее обновление аккаунта:
+                <div type="date" th:text="*{#temporals.format(updatedDate,'yyyy-MM-dd HH:mm:ss')}" id="updatedDate"
                      class="form-control"></div>
             </label>
         </div>

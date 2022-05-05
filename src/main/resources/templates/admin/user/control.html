@@ -1,0 +1,34 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <div th:insert="main :: head"></div>
+</head>
+
+<body>
+<div th:fragment="block">
+    <div th:if="${user.status == 'Активен'}" class="col-sm pe-0">
+        <form th:action="'/users/' + ${user.id} + '/block'" method="POST">
+            <b>
+                <button class="btn btn-link btn-sm text-info" type="submit">
+                    <div th:insert="svg :: block"></div>
+                </button>
+            </b>
+        </form>
+    </div>
+</div>
+
+<div th:fragment="unblock">
+    <div th:if="${user.status == 'Забанен'}" class="col-sm pe-0">
+        <form th:action="'/users/' + ${user.id} + '/unblock'" method="POST">
+            <b>
+                <button class="btn btn-link btn-sm text-info" type="submit">
+                    <div th:insert="svg :: unblock"></div>
+                </button>
+            </b>
+        </form>
+    </div>
+</div>
+</body>
+</html>

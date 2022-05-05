@@ -1,14 +1,21 @@
 package kg.banksystem.deliveryclient.controller;
 
 import kg.banksystem.deliveryclient.dto.admin.response.ListUserResponseMessageDTO;
+import kg.banksystem.deliveryclient.dto.bank.request.ClientRequestDTO;
 import kg.banksystem.deliveryclient.dto.bank.request.UsersWithRoleRequestDTO;
+import kg.banksystem.deliveryclient.dto.bank.response.ClientResponseDTO;
+import kg.banksystem.deliveryclient.dto.bank.response.ClientResponseMessageDTO;
+import kg.banksystem.deliveryclient.dto.bank.response.ListClientResponseMessageDTO;
+import kg.banksystem.deliveryclient.dto.baseresponse.LogicalResponseMessageDTO;
+import kg.banksystem.deliveryclient.dto.baseresponse.SimpleResponseMessageDTO;
+import kg.banksystem.deliveryclient.dto.branch.request.OrderRequestDTO;
 import kg.banksystem.deliveryclient.service.BankService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class BankEmployeeController {
@@ -20,55 +27,203 @@ public class BankEmployeeController {
         this.bankService = bankService;
     }
 
+    // DONE
     @GetMapping("users/couriers")
-    public String getCouriersPage(@CookieValue(name = "token") String token, Model model) {
+    public String getCouriersPage(@CookieValue(name = "token") String token, Model model,
+                                  @RequestParam(defaultValue = "0") int page) {
         try {
             UsersWithRoleRequestDTO users = new UsersWithRoleRequestDTO();
             users.setRequestRole("courier");
             if (token == null) {
                 return "redirect:/error/401";
             } else {
-                getPages(token, model, users);
+                getPages(token, model, users, page);
             }
-            return "bank/branchCouriersList";
+            return "bank/user/branchCouriers";
         } catch (HttpClientErrorException.Forbidden exf) {
             return "redirect:/error/403";
+        } catch (HttpClientErrorException.Unauthorized exu) {
+            return "redirect:/error/401";
         }
     }
 
+    // DONE
     @GetMapping("users/employees")
-    public String getBranchEmployeesPage(@CookieValue(name = "token") String token, Model model) {
+    public String getBranchEmployeesPage(@CookieValue(name = "token") String token, Model model,
+                                         @RequestParam(defaultValue = "0") int page) {
         try {
             UsersWithRoleRequestDTO users = new UsersWithRoleRequestDTO();
             users.setRequestRole("branch_employee");
             if (token == null) {
                 return "redirect:/error/401";
             } else {
-                getPages(token, model, users);
+                getPages(token, model, users, page);
             }
-            return "bank/branchEmployeesList";
+            return "bank/user/branchEmployees";
         } catch (HttpClientErrorException.Forbidden exf) {
             return "redirect:/error/403";
+        } catch (HttpClientErrorException.Unauthorized exu) {
+            return "redirect:/error/401";
         }
     }
 
-    @GetMapping("bank/orders")
-    public String getOrdersPage(@CookieValue(name = "token") String token, Model model) {
-        return null;
-    }
-
+    // DONE
     @GetMapping("clients")
-    public String getClientsPage(@CookieValue(name = "token") String token, Model model) {
+    public String getClientsPage(@CookieValue(name = "token") String token, Model model,
+                                 @RequestParam(defaultValue = "0") int page) {
+        try {
+            if (token == null) {
+                return "redirect:/error/401";
+            } else {
+                ListClientResponseMessageDTO feedback = bankService.getAllClients(token, page);
+                if (feedback.getStatus().equals("ERROR")) {
+                    model.addAttribute("clientError", true);
+                    model.addAttribute("feedback", feedback.getMessage());
+                } else {
+                    model.addAttribute("clients", feedback.getData());
+                }
+                model.addAttribute("currentPage", page);
+                model.addAttribute("totalPages", feedback.getTotalPages() - 1);
+                return "bank/client/clients";
+            }
+        } catch (HttpClientErrorException.Forbidden exf) {
+            return "redirect:/error/403";
+        } catch (HttpClientErrorException.Unauthorized exu) {
+            return "redirect:/error/401";
+        }
+    }
+
+    // DONE
+    @PostMapping("clients/add")
+    public String clientAdd(@CookieValue(name = "token") String token, RedirectAttributes redirectAttributes,
+                            @ModelAttribute("clientRequestDTO") ClientRequestDTO clientRequestDTO) {
+        try {
+            if (token == null) {
+                return "redirect:/error/401";
+            } else {
+                SimpleResponseMessageDTO feedback = bankService.addClient(token, clientRequestDTO);
+                if (feedback.getStatus().equals("ERROR")) {
+                    redirectAttributes.addFlashAttribute("action", "add-fail");
+                } else {
+                    redirectAttributes.addFlashAttribute("action", "add-success");
+                }
+                redirectAttributes.addFlashAttribute("feedback", feedback.getMessage());
+                return "redirect:/clients";
+            }
+        } catch (HttpClientErrorException.Forbidden exf) {
+            return "redirect:/error/403";
+        } catch (HttpClientErrorException.Unauthorized exu) {
+            return "redirect:/error/401";
+        }
+    }
+
+    // DONE
+    @PostMapping("clients/edit")
+    public String clientEdit(@CookieValue(name = "token") String token, RedirectAttributes redirectAttributes,
+                             @ModelAttribute("clientRequestDTO") ClientRequestDTO clientRequestDTO) {
+        try {
+            if (token == null) {
+                return "redirect:/error/401";
+            } else {
+                SimpleResponseMessageDTO feedback = bankService.editClient(token, clientRequestDTO);
+                if (feedback.getStatus().equals("ERROR")) {
+                    redirectAttributes.addFlashAttribute("action", "edit-fail");
+                } else {
+                    redirectAttributes.addFlashAttribute("action", "edit-success");
+                }
+                redirectAttributes.addFlashAttribute("feedback", feedback.getMessage());
+                return "redirect:/clients";
+            }
+        } catch (HttpClientErrorException.Forbidden exf) {
+            return "redirect:/error/403";
+        } catch (HttpClientErrorException.Unauthorized exu) {
+            return "redirect:/error/401";
+        }
+    }
+
+    // DONE
+    @PostMapping("clients/delete")
+    public String clientDelete(@CookieValue(name = "token") String token, RedirectAttributes redirectAttributes,
+                               @ModelAttribute("clientRequestDTO") ClientRequestDTO clientRequestDTO) {
+        try {
+            if (token == null) {
+                return "redirect:/error/401";
+            } else {
+                SimpleResponseMessageDTO feedback = bankService.deleteClient(token, clientRequestDTO);
+                if (feedback.getStatus().equals("ERROR")) {
+                    redirectAttributes.addFlashAttribute("action", "delete-fail");
+                } else {
+                    redirectAttributes.addFlashAttribute("action", "delete-success");
+                }
+                redirectAttributes.addFlashAttribute("feedback", feedback.getMessage());
+                return "redirect:/clients";
+            }
+        } catch (HttpClientErrorException.Forbidden exf) {
+            return "redirect:/error/403";
+        } catch (HttpClientErrorException.Unauthorized exu) {
+            return "redirect:/error/401";
+        }
+    }
+
+    // IN PROGRESS
+    @PostMapping("orders/add")
+    public String orderAdd(@CookieValue(name = "token") String token, RedirectAttributes redirectAttributes,
+                           @ModelAttribute("orderRequestDTO") OrderRequestDTO orderRequestDTO) {
         return null;
     }
 
-    public void getPages(String token, Model model, UsersWithRoleRequestDTO users) {
-        ListUserResponseMessageDTO feedback = bankService.getAllUsers(token, users);
-        if (feedback.getStatus().equals("ERROR")) {
-            model.addAttribute("userError", true);
-            model.addAttribute("feedback", feedback.getMessage());
-        } else {
-            model.addAttribute("userList", feedback.getData());
+    // IN PROGRESS
+    @PostMapping("orders/edit")
+    public String orderEdit(@CookieValue(name = "token") String token, RedirectAttributes redirectAttributes,
+                            @ModelAttribute("orderRequestDTO") OrderRequestDTO orderRequestDTO) {
+        return null;
+    }
+
+    // IN PROGRESS
+    @PostMapping("orders/delete")
+    public String orderDelete(@CookieValue(name = "token") String token, RedirectAttributes redirectAttributes,
+                              @ModelAttribute("clientRequestDTO") ClientRequestDTO clientRequestDTO) {
+        return null;
+    }
+
+    // DONE
+    @PostMapping("change/sent-to-branch")
+    public String changeStatusSentToBranch(@CookieValue(name = "token") String token, RedirectAttributes redirectAttributes,
+                                           @ModelAttribute("id") Long id) {
+        try {
+            if (token == null) {
+                return "redirect:/error/401";
+            } else {
+                OrderRequestDTO orderRequestDTO = new OrderRequestDTO();
+                orderRequestDTO.setId(id);
+                LogicalResponseMessageDTO feedback = bankService.changeStatusSentToBranch(token, orderRequestDTO);
+                if (feedback.getStatus().equals("ERROR")) {
+                    redirectAttributes.addFlashAttribute("action", "sent-to-branch-fail");
+                } else {
+                    redirectAttributes.addFlashAttribute("action", "sent-to-branch-success");
+                }
+                redirectAttributes.addFlashAttribute("feedback", feedback.getMessage());
+                return "redirect:/orders";
+            }
+        } catch (HttpClientErrorException.Forbidden exf) {
+            return "redirect:/error/403";
+        } catch (HttpClientErrorException.Unauthorized exu) {
+            return "redirect:/error/401";
         }
+    }
+
+    // DONE
+    @GetMapping(value = {"clients/detail", "clients/clients/detail"})
+    @ResponseBody
+    public ClientResponseDTO getClientById(@CookieValue(name = "token") String token,
+                                           @ModelAttribute("clientRequestDTO") ClientRequestDTO clientRequestDTO) {
+        ClientResponseMessageDTO feedback = bankService.getClientById(token, clientRequestDTO);
+        return feedback.getData();
+    }
+
+    // DONE
+    public void getPages(String token, Model model, UsersWithRoleRequestDTO users, int page) {
+        ListUserResponseMessageDTO feedback = bankService.getAllUsers(token, users, page);
+        BaseAdminController.baseUserPages(model, page, feedback);
     }
 }

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <div th:insert="main :: head"></div>
+</head>
+
+<body>
+<div th:fragment="editClient">
+    <div class="customForm">
+        <form th:action="@{/clients/edit}" method="POST" autocomplete="off">
+            <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="header" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="header">Изменение клиента банка</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="mb-3 d-none">
+                                <label for="id" class="col-form-label">Идентификатор:</label>
+                                <input type="text" name="id" id="id" class="form-control" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="clientPin" class="col-form-label">Введите новый ПИН клиента:</label>
+                                <input type="text" name="clientPin" id="clientPin" class="form-control" maxlength="14"
+                                       required oninput="this.value = this.value.replace(/\D/g, '')">
+                            </div>
+                            <div class="mb-3">
+                                <label for="clientFullName" class="col-form-label">Введите новое ФИО клиента:</label>
+                                <input type="text" name="clientFullName" id="clientFullName" class="form-control"
+                                       required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="clientPhoneNumber" class="col-form-label">Введите новый номер телефона
+                                    клиента:</label>
+                                <input type="text" name="clientPhoneNumber" id="clientPhoneNumber" class="form-control"
+                                       maxlength="10"
+                                       required oninput="this.value = this.value.replace(/\D/g, '')">
+                            </div>
+                        </div>
+                        <div class="modal-footer justify-content-center">
+                            <input type="submit" value="Изменить клиента банка &#9776;" class="btn btn-danger"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

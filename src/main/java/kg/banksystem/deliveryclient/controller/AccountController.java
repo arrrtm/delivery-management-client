@@ -2,8 +2,8 @@ package kg.banksystem.deliveryclient.controller;
 
 import kg.banksystem.deliveryclient.dto.account.request.EditAccountRequestDTO;
 import kg.banksystem.deliveryclient.dto.account.request.ResetPasswordRequestDTO;
-import kg.banksystem.deliveryclient.dto.account.response.LogicalResponseMessageDTO;
 import kg.banksystem.deliveryclient.dto.admin.response.UserResponseMessageDTO;
+import kg.banksystem.deliveryclient.dto.baseresponse.LogicalResponseMessageDTO;
 import kg.banksystem.deliveryclient.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,6 +24,7 @@ public class AccountController {
         this.accountService = accountService;
     }
 
+    // DONE
     @GetMapping("view")
     public String getPersonalAreaPage(@CookieValue(name = "token") String token, Model model,
                                       RedirectAttributes redirectAttributes) {
@@ -37,17 +38,19 @@ public class AccountController {
                 return "redirect:/view";
             } else {
                 model.addAttribute("userResponseDTO", feedback.getData().getUserData());
-                return "account/personal_area";
+                return "account/personalArea";
             }
         }
     }
 
+    // DONE
     @GetMapping("reset")
     public String getPasswordResetPage(Model model) {
         model.addAttribute("resetPasswordRequestDTO", new ResetPasswordRequestDTO());
         return "account/reset";
     }
 
+    // DONE
     @PostMapping("reset")
     public String resetPasswordByEmail(@ModelAttribute("resetPasswordRequestDTO") ResetPasswordRequestDTO resetPasswordRequestDTO,
                                        RedirectAttributes redirectAttributes) {
@@ -61,8 +64,9 @@ public class AccountController {
         return "redirect:/reset";
     }
 
+    // DONE
     @GetMapping("edit/personal")
-    public String getEditPersonalDataPage(Model model, @CookieValue(name = "token") String token) {
+    public String getEditPersonalDataPage(@CookieValue(name = "token") String token, Model model) {
         EditAccountRequestDTO editAccountRequestDTO = new EditAccountRequestDTO();
         UserResponseMessageDTO user = accountService.viewPersonalArea(token);
         editAccountRequestDTO.setUserFullName(user.getData().getUserData().getUserFullName());
@@ -70,20 +74,22 @@ public class AccountController {
         editAccountRequestDTO.setEmail(user.getData().getUserData().getEmail());
         editAccountRequestDTO.setStatus("personal_data");
         model.addAttribute("editAccountRequestDTO", editAccountRequestDTO);
-        return "account/change_personal_data";
+        return "account/changePersonalData";
     }
 
+    // DONE
     @GetMapping("edit/password")
     public String getEditPasswordPage(Model model) {
         EditAccountRequestDTO editAccountRequestDTO = new EditAccountRequestDTO();
         editAccountRequestDTO.setStatus("personal_password");
         model.addAttribute("editAccountRequestDTO", editAccountRequestDTO);
-        return "account/change_password";
+        return "account/changePassword";
     }
 
+    // DONE
     @PostMapping(value = {"edit/password", "edit/personal"})
-    public String editPersonalPassword(@ModelAttribute("editAccountRequestDTO") EditAccountRequestDTO editAccountRequestDTO,
-                                       @CookieValue(name = "token") String token, RedirectAttributes redirectAttributes) {
+    public String editPersonalPassword(@CookieValue(name = "token") String token, RedirectAttributes redirectAttributes,
+                                       @ModelAttribute("editAccountRequestDTO") EditAccountRequestDTO editAccountRequestDTO) {
         if (token == null) {
             return "redirect:/error/401";
         } else if (editAccountRequestDTO.getStatus().equals("personal_password") ||

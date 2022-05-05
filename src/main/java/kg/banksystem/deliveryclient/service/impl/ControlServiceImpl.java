@@ -1,7 +1,7 @@
 package kg.banksystem.deliveryclient.service.impl;
 
-import kg.banksystem.deliveryclient.dto.account.response.LogicalResponseMessageDTO;
 import kg.banksystem.deliveryclient.dto.admin.request.UserRequestDTO;
+import kg.banksystem.deliveryclient.dto.baseresponse.LogicalResponseMessageDTO;
 import kg.banksystem.deliveryclient.service.ControlService;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;

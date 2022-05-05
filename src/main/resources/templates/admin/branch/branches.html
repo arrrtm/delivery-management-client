@@ -1,0 +1,85 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <title>Филиалы</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <div th:insert="main :: head"></div>
+</head>
+
+<body>
+<div th:insert="main :: nav-other"></div>
+<div class="container text-center pt-lg-3">
+    <h2>Управление филиалами</h2>
+</div>
+<hr/>
+
+<div class="container">
+    <div class="d-flex flex-row justify-content-between">
+        <div class="block">
+            <div th:if="${branchError != true}">
+                <ul class="nav nav-pills">
+                    <li class="nav-item border border-light rounded"
+                        th:each="page : ${#numbers.sequence(0, totalPages)}">
+                        <a th:href="@{/branches/(page=${page})}" th:text="${page}" class="nav-link text-dark"
+                           th:classappend="(${currentPage}==${page}?'active bg-danger text-white':'')">
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="block"></div>
+        <div class="block">
+            <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#addModal">Добавить филиал
+                &#10011;
+            </button>
+        </div>
+    </div>
+</div>
+<hr>
+
+<div class="container-fluid text-center">
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th scope="col">Наименование филиала</th>
+            <th scope="col">Адрес филиала</th>
+            <th scope="col">Управление</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="branch : ${branches}">
+            <td th:text="${branch.name}"></td>
+            <td th:text="${branch.address}"></td>
+            <td>
+                <div class="container d-flex flex-row bd-highlight justify-content-center">
+                    <div class="row">
+                        <div class="col-sm">
+                            <a th:href="@{branches/detail/(id=${branch.id})}"
+                               class="btn btn-link btn-sm text-info editBranch" data-bs-toggle="modal"
+                               data-bs-target="#editModal">
+                                <div th:insert="svg :: update"></div>
+                            </a>
+                        </div>
+                        <div class="col-sm">
+                            <a th:href="@{branches/detail/(id=${branch.id})}"
+                               class="btn btn-link btn-sm text-danger deleteBranch" data-bs-toggle="modal"
+                               data-bs-target="#deleteModal">
+                                <div th:insert="svg :: delete"></div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="alert alert-danger text-center" th:if="${branchError == true}" th:text="${feedback}"></div>
+<br>
+<div th:insert="main :: footer"></div>
+<div th:insert="admin/branch/add :: addBranch"></div>
+<div th:insert="admin/branch/edit :: editBranch"></div>
+<div th:insert="admin/branch/delete :: deleteBranch"></div>
+</body>
+</html>

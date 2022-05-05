@@ -1,0 +1,86 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <title>Клиенты банка</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <div th:insert="main :: head"></div>
+</head>
+
+<body>
+<div th:insert="main :: nav-other"></div>
+<div class="container text-center pt-lg-3">
+    <h2>Управление клиентами банка</h2>
+</div>
+<hr/>
+
+<div class="container">
+    <div class="d-flex flex-row justify-content-between">
+        <div class="block">
+            <div th:if="${clientError != true}">
+                <ul class="nav nav-pills">
+                    <li class="nav-item border border-light rounded"
+                        th:each="page : ${#numbers.sequence(0, totalPages)}">
+                        <a th:href="@{/clients/(page=${page})}" th:text="${page}" class="nav-link text-dark"
+                           th:classappend="(${currentPage}==${page}?'active bg-danger text-white':'')">
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="block"></div>
+        <div class="block">
+            <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#addModal">Добавить клиента &#10011;
+            </button>
+        </div>
+    </div>
+</div>
+<hr>
+
+<div class="container-fluid text-center">
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th scope="col">ПИН клиента</th>
+            <th scope="col">ФИО клиента</th>
+            <th scope="col">Номер телефона</th>
+            <th scope="col">Управление</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="client : ${clients}">
+            <td th:text="${client.clientPin}"></td>
+            <td th:text="${client.clientFullName}"></td>
+            <td th:text="${client.clientPhoneNumber}"></td>
+            <td>
+                <div class="container d-flex flex-row bd-highlight justify-content-center">
+                    <div class="row">
+                        <div class="col-sm">
+                            <a th:href="@{clients/detail/(id=${client.id})}"
+                               class="btn btn-link btn-sm text-info editClient" data-bs-toggle="modal"
+                               data-bs-target="#editModal">
+                                <div th:insert="svg :: update"></div>
+                            </a>
+                        </div>
+                        <div class="col-sm">
+                            <a th:href="@{clients/detail/(id=${client.id})}"
+                               class="btn btn-link btn-sm text-danger deleteClient" data-bs-toggle="modal"
+                               data-bs-target="#deleteModal">
+                                <div th:insert="svg :: delete"></div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="alert alert-danger text-center" th:if="${clientError == true}" th:text="${feedback}"></div>
+<br>
+<div th:insert="main :: footer"></div>
+<div th:insert="bank/client/add :: addClient"></div>
+<div th:insert="bank/client/edit :: editClient"></div>
+<div th:insert="bank/client/delete :: deleteClient"></div>
+</body>
+</html>

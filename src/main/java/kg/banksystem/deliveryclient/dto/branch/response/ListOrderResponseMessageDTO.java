@@ -9,4 +9,5 @@ public class ListOrderResponseMessageDTO {
     private String message;
     private List<OrderResponseDTO> data;
     private String status;
+    private int totalPages;
 }

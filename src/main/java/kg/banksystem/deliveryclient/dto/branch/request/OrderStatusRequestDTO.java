@@ -4,5 +4,6 @@ import lombok.Data;
 
 @Data
 public class OrderStatusRequestDTO {
+    private Long id;
     private String requestStatus;
 }

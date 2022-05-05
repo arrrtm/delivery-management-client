@@ -1,4 +1,4 @@
-package kg.banksystem.deliveryclient.dto.account.response;
+package kg.banksystem.deliveryclient.dto.baseresponse;
 
 import lombok.Data;
 

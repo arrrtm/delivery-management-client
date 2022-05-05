@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <div th:insert="main :: head"></div>
+</head>
+
+<body>
+<div th:fragment="editOrder">
+    <div class="customForm">
+        <form th:action="@{/orders/edit}" method="POST" autocomplete="off">
+            <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="header" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="header">Изменение заказа</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="mb-3 d-none">
+                                <label for="id" class="col-form-label">Идентификатор:</label>
+                                <input type="text" name="id" id="id" class="form-control" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="addressPickup" class="col-form-label">Введите новый адрес взятия
+                                    карты:</label>
+                                <input type="text" name="addressPickup" id="addressPickup" class="form-control"
+                                       required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="addressDelivery" class="col-form-label">Введите новый адрес доставки
+                                    карты:</label>
+                                <input type="text" name="addressDelivery" id="addressDelivery" class="form-control"
+                                       required>
+                            </div>
+                        </div>
+                        <div class="modal-footer justify-content-center">
+                            <input type="submit" value="Изменить заказ &#9776;" class="btn btn-danger"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>
