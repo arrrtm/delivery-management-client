@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <div th:insert="main :: head"></div>
+</head>
+
+<body>
+<div th:fragment="detailStory">
+    <div class="customForm">
+        <div class="modal fade" id="detailStory" tabindex="-1" aria-labelledby="header"
+             aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="headerProcessingActiveOrder">Подробный просмотр завершённого
+                            заказа</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <h6 class="text-center pb-0 mb-0"><u>Информация по заказу</u></h6>
+                        <div class="mb-3">
+                            <label for="id" class="col-form-label">Номер истории:</label>
+                            <input readonly type="text" name="id" id="id" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                            <label for="orderNumber" class="col-form-label">Номер заказа:</label>
+                            <input readonly type="text" name="orderNumber" id="orderNumber" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                            <label for="addressPickup" class="col-form-label">Адрес взятия карты:</label>
+                            <input readonly type="text" name="addressPickup" id="addressPickup"
+                                   class="form-control">
+                        </div>
+                        <div class="mb-3">
+                            <label for="addressDelivery" class="col-form-label">Адрес доставки карты:</label>
+                            <input readonly type="text" name="addressDelivery" id="addressDelivery"
+                                   class="form-control">
+                        </div>
+                        <div class="mb-3">
+                            <label for="status" class="col-form-label">Статус завершения заказа:</label>
+                            <input readonly type="text" name="status" id="status" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                            <label for="comment" class="col-form-label">Комментарий при завершении заказа:</label>
+                            <input readonly type="text" name="comment" id="comment" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                            <label for="updatedDate" class="col-form-label">Дата завершения заказа:</label>
+                            <input readonly type="text" name="updatedDate" id="updatedDate"
+                                   class="form-control">
+                        </div>
+                        <hr>
+                        <h6 class="text-center pb-0 mb-0"><u>Информация по карте</u></h6>
+                        <div class="mb-3">
+                            <label for="typeCard" class="col-form-label">Тип карты:</label>
+                            <input readonly type="text" name="typeCard" id="typeCard" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                            <label for="description" class="col-form-label">Описание карты:</label>
+                            <textarea readonly type="text" name="description" id="description"
+                                      class="form-control"></textarea>
+                        </div>
+                        <hr>
+                        <h6 class="text-center pb-0 mb-0"><u>Информация по клиенту</u></h6>
+                        <div class="mb-3">
+                            <label for="clientPin" class="col-form-label">ПИН клиента:</label>
+                            <input readonly type="text" name="clientPin" id="clientPin" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                            <label for="clientFullName" class="col-form-label">ФИО клиента:</label>
+                            <input readonly type="text" name="clientFullName" id="clientFullName"
+                                   class="form-control">
+                        </div>
+                        <div class="mb-3">
+                            <label for="clientPhoneNumber" class="col-form-label">Номер телефона:</label>
+                            <input readonly type="text" name="clientPhoneNumber" id="clientPhoneNumber"
+                                   class="form-control">
+                        </div>
+                        <hr>
+                        <h6 class="text-center pb-0 mb-0"><u>Информация по филиалу</u></h6>
+                        <div class="mb-3">
+                            <label for="branchName" class="col-form-label">Наименование филиала:</label>
+                            <input readonly type="text" name="branchName" id="branchName" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                            <label for="branchAddress" class="col-form-label">Адрес филиала:</label>
+                            <input readonly type="text" name="branchAddress" id="branchAddress"
+                                   class="form-control">
+                        </div>
+                        <hr>
+                        <h6 class="text-center pb-0 mb-0"><u>Информация по курьеру</u></h6>
+                        <div class="mb-3">
+                            <label for="userFullName" class="col-form-label">ФИО курьера:</label>
+                            <input readonly type="text" name="userFullName" id="userFullName"
+                                   class="form-control">
+                        </div>
+                        <div class="mb-3">
+                            <label for="userPhoneNumber" class="col-form-label">Номер телефона курьера:</label>
+                            <input readonly type="text" name="userPhoneNumber" id="userPhoneNumber"
+                                   class="form-control">
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="col-form-label">Электронная почта курьера:</label>
+                            <input readonly type="text" name="email" id="email" class="form-control">
+                        </div>
+                        <hr>
+                    </div>
+                    <hr>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

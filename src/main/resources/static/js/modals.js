@@ -22,7 +22,7 @@ $(document).ready(function () {
         });
     });
 
-    $('.table .detailOrder, .table .editOrder, .table .deleteOrder, .table .destroyOrder, .table .qrOrder, .table .sentOrder').on('click', function (event) {
+    $('.table .detailOrder, .table .editOrder, .table .deleteOrder, .table .destroyOrder, .table .sentOrder').on('click', function (event) {
         event.preventDefault();
         let href = $(this).attr('href');
 
@@ -41,9 +41,38 @@ $(document).ready(function () {
             $('.customForm #clientPhoneNumber, #clientPhoneNumberNO, #clientPhoneNumberAO').val(order.client.clientPhoneNumber);
             $('.customForm #branchName, #branchNameNO, #branchNameAO').val(order.branch.name);
             $('.customForm #branchAddress, #branchAddressNO, #branchAddressAO').val(order.branch.address);
-            $('.customForm #userFullNameAO').val(order.users[0].userFullName);
-            $('.customForm #userPhoneNumberAO').val(order.users[0].userPhoneNumber);
-            $('.customForm #emailAO').val(order.users[0].email);
+
+            if (!(order.users.length === 0)) {
+                $('.customForm #userFullNameAO').val(order.users[0].userFullName);
+                $('.customForm #userPhoneNumberAO').val(order.users[0].userPhoneNumber);
+                $('.customForm #emailAO').val(order.users[0].email);
+            }
+        });
+    });
+
+    $('.table .detailStory').on('click', function (event) {
+        event.preventDefault();
+        let href = $(this).attr('href');
+
+        $.get(href, function (order) {
+            $('.customForm #id').val(order.id);
+            $('.customForm #addressPickup').val(order.addressPickup);
+            $('.customForm #addressDelivery').val(order.addressDelivery);
+            $('.customForm #orderNumber').val(order.orderNumber);
+            $('.customForm #comment').val(order.comment);
+            $('.customForm #status').val(order.status);
+            $('.customForm #createdDate').val(order.createdDate.replaceAll("T", " "));
+            $('.customForm #updatedDate').val(order.updatedDate.replaceAll("T", " "));
+            $('.customForm #typeCard, #typeCardNO, #typeCardAO').val(order.card.typeCard);
+            $('.customForm #description, #descriptionNO, #descriptionAO').val(order.card.description);
+            $('.customForm #clientPin').val(order.client.clientPin);
+            $('.customForm #clientFullName').val(order.client.clientFullName);
+            $('.customForm #clientPhoneNumber, #clientPhoneNumberNO, #clientPhoneNumberAO').val(order.client.clientPhoneNumber);
+            $('.customForm #branchName').val(order.branch.name);
+            $('.customForm #branchAddress').val(order.branch.address);
+            $('.customForm #userFullName').val(order.user.userFullName);
+            $('.customForm #userPhoneNumber').val(order.user.userPhoneNumber);
+            $('.customForm #email, #emailAO').val(order.user.email);
         });
     });
 });

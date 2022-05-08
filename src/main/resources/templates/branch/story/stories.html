@@ -1,0 +1,110 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <title>Истории заказов для филиала</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <div th:insert="main :: head"></div>
+</head>
+
+<body>
+<div th:insert="main :: nav-other"></div>
+<div class="container text-center pt-lg-3">
+    <h2>Истории заказов для филиала</h2>
+</div>
+<hr>
+
+<div class="container">
+    <div class="d-flex flex-row justify-content-between">
+        <div class="block">
+            <div th:if="${storyError != true}">
+                <ul class="nav nav-pills">
+                    <li class="nav-item border border-light rounded"
+                        th:each="page : ${#numbers.sequence(0, totalPages)}">
+                        <a th:href="@{/story/branch(page=${page},courier=${courier})}" th:text="${page}"
+                           class="nav-link text-dark"
+                           th:classappend="(${currentPage}==${page}?'active bg-danger text-white':'')">
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="block">
+            <div class="row">
+                <form th:action="@{/story/branch}" method="GET">
+                    <label>
+                        <input type="number" id="number" name="number" placeholder="Введите номер заказа"
+                               class="form-control form-control-sm" autocomplete="off">
+                    </label>
+                    <button class="btn btn-danger btn-sm mt-1 mb-2" type="submit">Поиск по номеру &raquo;</button>
+                </form>
+            </div>
+        </div>
+        <div class="block">
+            <div class="row">
+                <form th:action="@{/story/branch}" method="GET">
+                    <label>
+                        <select id="courier" name="courier" class="form-select form-select-sm">
+                            <option selected disabled>Выберите курьера</option>
+                            <option th:each="courier : ${couriers}" th:value="${courier.id}"
+                                    th:text="${courier.userFullName}"></option>
+                        </select>
+                    </label>
+                    <button class="btn btn-danger btn-sm mt-1 mb-2" type="submit">Поиск по курьеру &raquo;</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<hr>
+
+<div class="container-fluid text-center">
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th scope="col">Номер истории</th>
+            <th scope="col">Номер заказа</th>
+            <th scope="col">Адрес вывоза</th>
+            <th scope="col">Адрес доставки</th>
+            <th scope="col">ФИО клиента</th>
+            <th scope="col">Телефон клиента</th>
+            <th scope="col">Статус заказа</th>
+            <th scope="col">Комментарий</th>
+            <th scope="col">Филиал</th>
+            <th scope="col">Подробный просмотр</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="story : ${stories}">
+            <td th:text="${story.id}"></td>
+            <td th:text="${story.orderNumber}"></td>
+            <td th:text="${story.addressPickup}"></td>
+            <td th:text="${story.addressDelivery}"></td>
+            <td th:text="${story.client.clientFullName}"></td>
+            <td th:text="${story.client.clientPhoneNumber}"></td>
+            <td th:text="${story.status}"></td>
+            <td th:text="${story.comment}"></td>
+            <td th:text="${story.branch.name}"></td>
+            <td>
+                <div class="container d-flex flex-row bd-highlight justify-content-center">
+                    <div class="row">
+                        <div class="col-sm">
+                            <a th:href="@{story/detail/(id=${story.id},requestStatus='story')}"
+                               class="btn btn-link btn-sm text-info detailStory" data-bs-toggle="modal"
+                               data-bs-target="#detailStory">
+                                <div th:insert="svg :: detail"></div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="alert alert-danger text-center" th:if="${storyError == true}" th:text="${feedback}"></div>
+<br>
+<div th:insert="main :: footer"></div>
+<div th:insert="admin/story/detail :: detailStory"></div>
+</body>
+</html>

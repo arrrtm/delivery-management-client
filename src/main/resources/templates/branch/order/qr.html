@@ -7,23 +7,29 @@
 </head>
 
 <body>
-<div th:fragment="orderQRCode">
-    <div class="customForm">
-        <form th:action="@{/orders/qr}" method="POST" autocomplete="off">
-            <div class="modal fade" id="orderQRCode" tabindex="-1" aria-labelledby="header" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="headerProcessingActiveOrder">QR</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                        </div>
-                    </div>
-                </div>
+<div th:insert="main :: nav-other"></div>
+<hr>
+
+<div>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="headerProcessingActiveOrder">QR-код для заказа с номером <i
+                        th:text="${id}"></i></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" onclick="window.history.back()"
+                        aria-label="Close"></button>
             </div>
-        </form>
+            <div class="modal-body">
+                <div th:if="${qrError != true}" class="mb-3 text-center">
+                    <img th:src="@{${'/images/' + 'QR-codes/' + qr}}" alt="QR" src="#"/>
+                </div>
+                <div class="alert alert-danger text-center" th:if="${qrError == true}" th:text="${feedback}"></div>
+            </div>
+        </div>
     </div>
 </div>
+<hr>
+
+<div th:insert="main :: footer"></div>
 </body>
 </html>

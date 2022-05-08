@@ -78,9 +78,8 @@
                 <div class="container d-flex flex-row bd-highlight justify-content-center">
                     <div class="row">
                         <div class="col-sm me-2 pt-0 p-lg-0">
-                            <a th:href="@{orders/qr/(id=${order.id})}"
-                               class="btn btn-link btn-sm text-input-dialog ps-0 pe-0 qrOrder" data-bs-toggle="modal"
-                               data-bs-target="#orderQRCode">
+                            <a th:href="@{qr/(id=${order.id})}"
+                               class="btn btn-link btn-sm text-input-dialog ps-0 pe-0">
                                 <div th:insert="svg :: qr"></div>
                             </a>
                         </div>
@@ -112,6 +111,5 @@
 <div th:insert="main :: footer"></div>
 <div th:insert="branch/order/processing :: processingActiveOrder"></div>
 <div th:insert="branch/order/destroy :: destroyOrder"></div>
-<div th:insert="branch/order/qr ::orderQRCode"></div>
 </body>
 </html>

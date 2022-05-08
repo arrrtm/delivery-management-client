@@ -1,11 +1,9 @@
 package kg.banksystem.deliveryclient.controller;
 
-import kg.banksystem.deliveryclient.dto.baseresponse.SimpleListResponseMessageDTO;
 import kg.banksystem.deliveryclient.dto.branch.request.OrderRequestDTO;
-import kg.banksystem.deliveryclient.dto.branch.response.ListOrderResponseMessageDTO;
-import kg.banksystem.deliveryclient.dto.branch.response.OrderResponseDTO;
-import kg.banksystem.deliveryclient.dto.branch.response.OrderResponseMessageDTO;
-import kg.banksystem.deliveryclient.service.BaseOperationService;
+import kg.banksystem.deliveryclient.dto.branch.request.OrderStoryRequestDTO;
+import kg.banksystem.deliveryclient.dto.branch.response.*;
+import kg.banksystem.deliveryclient.service.GeneralService;
 import kg.banksystem.deliveryclient.service.impl.AuthenticationServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,13 +16,13 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 
 @Controller
-public class HomeController {
+public class GeneralController {
 
-    private final BaseOperationService baseOperationService;
+    private final GeneralService generalService;
 
     @Autowired
-    public HomeController(BaseOperationService baseOperationService) {
-        this.baseOperationService = baseOperationService;
+    public GeneralController(GeneralService generalService) {
+        this.generalService = generalService;
     }
 
     // DONE
@@ -38,10 +36,10 @@ public class HomeController {
             if (token == null) {
                 return "redirect:/error/401";
             } else {
-                String role = baseOperationService.getRoleByToken(token);
+                String role = generalService.getRoleByToken(token);
                 String user_role = "Вы авторизовались как " + role;
                 model.addAttribute("user_role", user_role);
-                model.addAttribute("user_name", baseOperationService.getNameByToken(token));
+                model.addAttribute("user_name", generalService.getNameByToken(token));
 
                 switch (role) {
                     case "Администратор":
@@ -69,7 +67,7 @@ public class HomeController {
             if (token == null) {
                 return "redirect:/error/401";
             } else {
-                ListOrderResponseMessageDTO feedback = baseOperationService.getAllActiveOrders(token, page, number, branch);
+                ListOrderResponseMessageDTO feedback = generalService.getAllActiveOrders(token, page, number, branch);
                 if (feedback.getStatus().equals("ERROR")) {
                     model.addAttribute("orderError", true);
                     model.addAttribute("feedback", feedback.getMessage());
@@ -77,11 +75,10 @@ public class HomeController {
                     model.addAttribute("orders", feedback.getData());
                 }
                 model.addAttribute("branch", branch);
-                SimpleListResponseMessageDTO branches = baseOperationService.getBranchNames(token);
-                model.addAttribute("branches", branches.getData());
+                model.addAttribute("branches", generalService.getBranchNames(token).getData());
                 model.addAttribute("currentPage", page);
                 model.addAttribute("totalPages", feedback.getTotalPages() - 1);
-                String role = baseOperationService.getRoleByToken(token);
+                String role = generalService.getRoleByToken(token);
                 if (role.equals("Администратор")) {
                     return "admin/order/orders";
                 } else if (role.equals("Сотрудник банка")) {
@@ -98,11 +95,58 @@ public class HomeController {
     }
 
     // DONE
+    @GetMapping("story")
+    public String getOrdersStoryPage(@CookieValue(name = "token") String token, Model model,
+                                     @RequestParam(defaultValue = "0") int page,
+                                     @RequestParam(defaultValue = "", required = false) Long number,
+                                     @RequestParam(defaultValue = "", required = false) String branch,
+                                     @RequestParam(defaultValue = "", required = false) Long courier) {
+        try {
+            if (token == null) {
+                return "redirect:/error/401";
+            } else {
+                ListOrderStoryResponseMessageDTO feedback = generalService.getAllOrderStory(token, page, number, branch, courier);
+                if (feedback.getStatus().equals("ERROR")) {
+                    model.addAttribute("storyError", true);
+                    model.addAttribute("feedback", feedback.getMessage());
+                } else {
+                    model.addAttribute("stories", feedback.getData());
+                }
+                model.addAttribute("currentPage", page);
+                model.addAttribute("totalPages", feedback.getTotalPages() - 1);
+                String role = generalService.getRoleByToken(token);
+                if (role.equals("Администратор") || role.equals("Сотрудник банка")) {
+                    model.addAttribute("courier", courier);
+                    model.addAttribute("couriers", generalService.getCouriers(token).getData());
+                    model.addAttribute("branch", branch);
+                    model.addAttribute("branches", generalService.getBranchNames(token).getData());
+                    return "admin/story/stories";
+                } else {
+                    return "redirect:/error/403";
+                }
+            }
+        } catch (HttpClientErrorException.Forbidden exf) {
+            return "redirect:/error/403";
+        } catch (HttpClientErrorException.Unauthorized exu) {
+            return "redirect:/error/401";
+        }
+    }
+
+    // DONE
     @GetMapping(value = {"orders/detail", "orders/orders/detail"})
     @ResponseBody
     public OrderResponseDTO getOrderById(@CookieValue(name = "token") String token,
-                                         @ModelAttribute("branchRequestDTO") OrderRequestDTO orderRequestDTO) {
-        OrderResponseMessageDTO feedback = baseOperationService.getOrderById(token, orderRequestDTO);
+                                         @ModelAttribute("orderRequestDTO") OrderRequestDTO orderRequestDTO) {
+        OrderResponseMessageDTO feedback = generalService.getOrderById(token, orderRequestDTO);
+        return feedback.getData();
+    }
+
+    // DONE
+    @GetMapping(value = {"story/detail", "story/story/detail"})
+    @ResponseBody
+    public OrderStoryResponseDTO getStoryById(@CookieValue(name = "token") String token,
+                                              @ModelAttribute("orderStoryRequestDTO") OrderStoryRequestDTO orderStoryRequestDTO) {
+        OrderStoryResponseMessageDTO feedback = generalService.getStoryById(token, orderStoryRequestDTO);
         return feedback.getData();
     }
 }

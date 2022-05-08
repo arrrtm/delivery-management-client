@@ -1,9 +1,11 @@
 package kg.banksystem.deliveryclient.controller;
 
 import kg.banksystem.deliveryclient.dto.baseresponse.LogicalResponseMessageDTO;
+import kg.banksystem.deliveryclient.dto.baseresponse.SimpleResponseMessageDTO;
 import kg.banksystem.deliveryclient.dto.branch.request.OrderRequestDTO;
 import kg.banksystem.deliveryclient.dto.branch.request.OrderStatusRequestDTO;
 import kg.banksystem.deliveryclient.dto.branch.response.ListOrderResponseMessageDTO;
+import kg.banksystem.deliveryclient.dto.branch.response.ListOrderStoryResponseMessageDTO;
 import kg.banksystem.deliveryclient.service.BranchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -86,6 +88,37 @@ public class BranchEmployeeController {
     }
 
     // DONE
+    @GetMapping("story/branch")
+    public String getAllOrdersStoryForBranchPage(@CookieValue(name = "token") String token, Model model,
+                                                 @RequestParam(defaultValue = "0") int page,
+                                                 @RequestParam(defaultValue = "", required = false) Long number,
+                                                 @RequestParam(defaultValue = "", required = false) Long courier) {
+        try {
+            if (token == null) {
+                return "redirect:/error/401";
+            } else {
+                ListOrderStoryResponseMessageDTO feedback = branchService.getOrderStoryForBranch(token, page, number, courier);
+                if (feedback.getStatus().equals("ERROR")) {
+                    model.addAttribute("storyError", true);
+                    model.addAttribute("feedback", feedback.getMessage());
+                } else {
+                    model.addAttribute("stories", feedback.getData());
+                }
+                model.addAttribute("currentPage", page);
+                model.addAttribute("totalPages", feedback.getTotalPages() - 1);
+                model.addAttribute("courier", courier);
+                model.addAttribute("couriers", branchService.getCouriersByBranch(token).getData());
+                return "branch/story/stories";
+            }
+        } catch (HttpClientErrorException.Forbidden exf) {
+            return "redirect:/error/403";
+        } catch (HttpClientErrorException.Unauthorized exu) {
+            return "redirect:/error/401";
+        }
+    }
+
+
+    // DONE
     @PostMapping("change/ready-from-delivery")
     public String changeStatusReadyFromDelivery(@CookieValue(name = "token") String token, RedirectAttributes redirectAttributes,
                                                 @ModelAttribute("idNO") Long id) {
@@ -137,10 +170,31 @@ public class BranchEmployeeController {
         }
     }
 
-    // IN PROGRESS
-    @PostMapping("orders/qr")
-    public String getQrForOrder(@CookieValue(name = "token") String token, Model model) {
-        return null;
+    // DONE
+    @GetMapping("orders/qr")
+    public String getQrForOrder(@CookieValue(name = "token") String token, Model model,
+                                @ModelAttribute("id") Long id) {
+        try {
+            if (token == null) {
+                return "redirect:/error/401";
+            } else {
+                OrderRequestDTO orderRequestDTO = new OrderRequestDTO();
+                orderRequestDTO.setId(id);
+                SimpleResponseMessageDTO feedback = branchService.getQrForOrder(token, orderRequestDTO);
+                if (feedback.getStatus().equals("ERROR")) {
+                    model.addAttribute("qrError", true);
+                    model.addAttribute("feedback", feedback.getMessage());
+                } else {
+                    model.addAttribute("qr", feedback.getData());
+                    model.addAttribute("number", id);
+                }
+                return "branch/order/qr";
+            }
+        } catch (HttpClientErrorException.Forbidden exf) {
+            return "redirect:/error/403";
+        } catch (HttpClientErrorException.Unauthorized exu) {
+            return "redirect:/error/401";
+        }
     }
 
     // DONE
