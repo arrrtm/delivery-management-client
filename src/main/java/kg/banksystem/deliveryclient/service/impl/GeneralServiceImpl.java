@@ -1,6 +1,7 @@
 package kg.banksystem.deliveryclient.service.impl;
 
 import kg.banksystem.deliveryclient.dto.account.response.RoleResponseMessageDTO;
+import kg.banksystem.deliveryclient.dto.admin.response.BranchStatisticResponseMessageDTO;
 import kg.banksystem.deliveryclient.dto.admin.response.ListUserResponseMessageDTO;
 import kg.banksystem.deliveryclient.dto.baseresponse.SimpleListResponseMessageDTO;
 import kg.banksystem.deliveryclient.dto.baseresponse.SimpleResponseMessageDTO;
@@ -123,6 +124,17 @@ public class GeneralServiceImpl implements GeneralService {
         headers.add("Authorization", "Bearer " + token);
         HttpEntity<?> entity = new HttpEntity<>(headers);
         ResponseEntity<ListUserResponseMessageDTO> response = restTemplate.exchange(ADDRESS_ALL + "couriers", HttpMethod.POST, entity, ListUserResponseMessageDTO.class);
+        return response.getBody();
+    }
+
+    @Override
+    public BranchStatisticResponseMessageDTO getStatistics(String token) {
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.add("Authorization", "Bearer " + token);
+        HttpEntity<?> entity = new HttpEntity<>(headers);
+        ResponseEntity<BranchStatisticResponseMessageDTO> response = restTemplate.exchange(ADDRESS_ALL + "statistic", HttpMethod.POST, entity, BranchStatisticResponseMessageDTO.class);
         return response.getBody();
     }
 }

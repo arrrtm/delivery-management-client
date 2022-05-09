@@ -1,0 +1,80 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <title>Общая статистика филиалов</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <div th:insert="main :: head"></div>
+</head>
+
+<body>
+<div th:insert="main :: nav-other"></div>
+<div class="container text-center pt-lg-3">
+    <h2>Общая статистика филиалов</h2>
+</div>
+<hr>
+
+<div class="container">
+    <div class="d-flex flex-row justify-content-center">
+        <div class="block">
+            <div class="row">
+                <form th:action="@{/statistics}" method="GET">
+                    <label>
+                        <select id="branch" name="branch" class="form-select form-select-sm">
+                            <option selected disabled>Выберите филиал</option>
+                            <option th:each="branch : ${branches}" th:value="${branch}" th:text="${branch}"></option>
+                        </select>
+                    </label>
+                    <label>
+                        <select id="period" name="period" class="form-select form-select-sm">
+                            <option selected disabled>Выберите период</option>
+                            <option>За неделю</option>
+                            <option>За месяц</option>
+                            <option>За год</option>
+                        </select>
+                    </label>
+                    <button class="btn btn-danger btn-sm mt-1 mb-2" type="submit">Полный отчёт в Excel за указанный
+                        период &raquo;
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<hr>
+
+<div class="container-fluid text-center">
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th scope="col">Наименование филиала</th>
+            <th scope="col">Адрес филиала</th>
+            <th scope="col">Активных заказов</th>
+            <th scope="col">Завершённых заказов</th>
+            <th scope="col">Активных курьеров</th>
+            <th scope="col">Неактивных курьеров</th>
+            <th scope="col">Завершённых заказов за неделю</th>
+            <th scope="col">Завершённых заказов за месяц</th>
+            <th scope="col">Завершённых заказов за год</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="statistic : ${statistics}">
+            <td th:text="${statistic.branchName}"></td>
+            <td th:text="${statistic.branchAddress}"></td>
+            <td th:text="${statistic.totalCountOfOrdersActive}"></td>
+            <td th:text="${statistic.totalCountOfOrdersComplete}"></td>
+            <td th:text="${statistic.totalCountOfCouriersActive}"></td>
+            <td th:text="${statistic.totalCountOfCouriersInactive}"></td>
+            <td th:text="${statistic.countOfCompletedOrdersPerWeek}"></td>
+            <td th:text="${statistic.countOfCompletedOrdersPerMonth}"></td>
+            <td th:text="${statistic.countOfCompletedOrdersPerYear}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="alert alert-danger text-center" th:if="${statisticsError == true}" th:text="${feedback}"></div>
+<br>
+<div th:insert="main :: footer"></div>
+</body>
+</html>

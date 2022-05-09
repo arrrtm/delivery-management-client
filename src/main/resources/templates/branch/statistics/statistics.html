@@ -1,0 +1,84 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <title>Статистика филиала</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <div th:insert="main :: head"></div>
+</head>
+
+<body>
+<div th:insert="main :: nav-other"></div>
+<div class="container text-center pt-lg-3">
+    <h2>Статистика филиала</h2>
+</div>
+<hr>
+
+<div class="container">
+    <div class="d-flex flex-row justify-content-between">
+        <div class="block"></div>
+        <div class="block">
+            <div class="row">
+                <form th:action="@{/statistics/branch}" method="GET">
+                    <label>
+                        <select id="courier" name="courier" class="form-select form-select-sm">
+                            <option selected disabled>Выберите курьера</option>
+                            <option th:each="courier : ${couriers}" th:value="${courier.id}"
+                                    th:text="${courier.userFullName}"></option>
+                        </select>
+                    </label>
+                    <label>
+                        <select id="period" name="period" class="form-select form-select-sm">
+                            <option selected disabled>Выберите период</option>
+                            <option>За неделю</option>
+                            <option>За месяц</option>
+                            <option>За год</option>
+                        </select>
+                    </label>
+                    <button class="btn btn-danger btn-sm mt-1 mb-2" type="submit">Полный отчёт в Excel за указанный
+                        период &raquo;
+                    </button>
+                </form>
+            </div>
+        </div>
+        <div class="block">
+            <div class="row">
+                <a th:href="@{/statistics/branch/couriers}" class="btn btn-danger btn-sm mt-1 mb-2">Просмотр статистики
+                    по курьерам &raquo;</a>
+            </div>
+        </div>
+    </div>
+</div>
+<hr>
+
+<div class="container-fluid text-center">
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th scope="col">Активных заказов в филиале</th>
+            <th scope="col">Завершённых заказов в филиале</th>
+            <th scope="col">Активных курьеров в филиале</th>
+            <th scope="col">Неактивных курьеров в филиале</th>
+            <th scope="col">Завершённых заказов за неделю</th>
+            <th scope="col">Завершённых заказов за месяц</th>
+            <th scope="col">Завершённых заказов за год</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="statistic : ${statistics}">
+            <td th:text="${statistic.totalCountOfOrdersActive}"></td>
+            <td th:text="${statistic.totalCountOfOrdersComplete}"></td>
+            <td th:text="${statistic.totalCountOfCouriersActive}"></td>
+            <td th:text="${statistic.totalCountOfCouriersInactive}"></td>
+            <td th:text="${statistic.countOfCompletedOrdersPerWeek}"></td>
+            <td th:text="${statistic.countOfCompletedOrdersPerMonth}"></td>
+            <td th:text="${statistic.countOfCompletedOrdersPerYear}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="alert alert-danger text-center" th:if="${statisticsError == true}" th:text="${feedback}"></div>
+<br>
+<div th:insert="main :: footer"></div>
+</body>
+</html>

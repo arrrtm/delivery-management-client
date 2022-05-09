@@ -1,5 +1,6 @@
 package kg.banksystem.deliveryclient.controller;
 
+import kg.banksystem.deliveryclient.dto.admin.response.BranchStatisticResponseMessageDTO;
 import kg.banksystem.deliveryclient.dto.branch.request.OrderRequestDTO;
 import kg.banksystem.deliveryclient.dto.branch.request.OrderStoryRequestDTO;
 import kg.banksystem.deliveryclient.dto.branch.response.*;
@@ -121,6 +122,35 @@ public class GeneralController {
                     model.addAttribute("branch", branch);
                     model.addAttribute("branches", generalService.getBranchNames(token).getData());
                     return "admin/story/stories";
+                } else {
+                    return "redirect:/error/403";
+                }
+            }
+        } catch (HttpClientErrorException.Forbidden exf) {
+            return "redirect:/error/403";
+        } catch (HttpClientErrorException.Unauthorized exu) {
+            return "redirect:/error/401";
+        }
+    }
+
+    // ALMOST DONE
+    @GetMapping("statistics")
+    public String getStatisticsPage(@CookieValue(name = "token") String token, Model model) {
+        try {
+            if (token == null) {
+                return "redirect:/error/401";
+            } else {
+                BranchStatisticResponseMessageDTO feedback = generalService.getStatistics(token);
+                if (feedback.getStatus().equals("ERROR")) {
+                    model.addAttribute("statisticsError", true);
+                    model.addAttribute("feedback", feedback.getMessage());
+                } else {
+                    model.addAttribute("statistics", feedback.getData());
+                }
+                model.addAttribute("branches", generalService.getBranchNames(token).getData());
+                String role = generalService.getRoleByToken(token);
+                if (role.equals("Администратор") || role.equals("Сотрудник банка")) {
+                    return "admin/statistics/statistics";
                 } else {
                     return "redirect:/error/403";
                 }

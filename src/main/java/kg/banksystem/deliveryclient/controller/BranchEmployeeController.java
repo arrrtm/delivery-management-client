@@ -197,6 +197,20 @@ public class BranchEmployeeController {
         }
     }
 
+    // IN PROGRESS
+    @GetMapping("statistics/branch")
+    public String getStatisticsForBranchPage(@CookieValue(name = "token") String token, Model model) {
+        model.addAttribute("couriers", branchService.getCouriersByBranch(token).getData());
+        return "branch/statistics/statistics";
+    }
+
+    // IN PROGRESS
+    @GetMapping("statistics/branch/couriers")
+    public String getStatisticsForBranchByCouriersPage(@CookieValue(name = "token") String token, Model model) {
+        model.addAttribute("couriers", branchService.getCouriersByBranch(token).getData());
+        return "branch/statistics/couriers";
+    }
+
     // DONE
     private void baseBranchPages(@CookieValue(name = "token") String token, Model model,
                                  @RequestParam(defaultValue = "0") int page,

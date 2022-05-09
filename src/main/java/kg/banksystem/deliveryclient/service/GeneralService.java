@@ -1,5 +1,6 @@
 package kg.banksystem.deliveryclient.service;
 
+import kg.banksystem.deliveryclient.dto.admin.response.BranchStatisticResponseMessageDTO;
 import kg.banksystem.deliveryclient.dto.admin.response.ListUserResponseMessageDTO;
 import kg.banksystem.deliveryclient.dto.baseresponse.SimpleListResponseMessageDTO;
 import kg.banksystem.deliveryclient.dto.branch.request.OrderRequestDTO;
@@ -25,4 +26,6 @@ public interface GeneralService {
     SimpleListResponseMessageDTO getBranchNames(String token);
 
     ListUserResponseMessageDTO getCouriers(String token);
+
+    BranchStatisticResponseMessageDTO getStatistics(String token);
 }
