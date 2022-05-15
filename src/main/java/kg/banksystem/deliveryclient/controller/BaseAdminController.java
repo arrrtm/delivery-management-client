@@ -5,8 +5,11 @@ import kg.banksystem.deliveryclient.dto.admin.request.UserRequestDTO;
 import kg.banksystem.deliveryclient.dto.admin.response.*;
 import kg.banksystem.deliveryclient.dto.baseresponse.LogicalResponseMessageDTO;
 import kg.banksystem.deliveryclient.dto.baseresponse.SimpleResponseMessageDTO;
+import kg.banksystem.deliveryclient.dto.branch.response.ListOrderResponseMessageDTO;
+import kg.banksystem.deliveryclient.dto.branch.response.ListOrderStoryResponseMessageDTO;
 import kg.banksystem.deliveryclient.service.AdminService;
 import kg.banksystem.deliveryclient.service.ControlService;
+import kg.banksystem.deliveryclient.service.GeneralService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,11 +25,13 @@ public class BaseAdminController {
 
     private final AdminService adminService;
     private final ControlService controlService;
+    private final GeneralService generalService;
 
     @Autowired
-    public BaseAdminController(AdminService adminService, ControlService controlService) {
+    public BaseAdminController(AdminService adminService, ControlService controlService, GeneralService generalService) {
         this.adminService = adminService;
         this.controlService = controlService;
+        this.generalService = generalService;
     }
 
     // DONE
@@ -62,23 +67,59 @@ public class BaseAdminController {
 
     // IN PROGRESS
     @PostMapping("users/register")
-    public String userRegister(@CookieValue(name = "token") String token, RedirectAttributes redirectAttributes,
+    public String userRegister(@CookieValue(name = "token") String token,
+                               RedirectAttributes redirectAttributes,
                                @ModelAttribute("userRequestDTO") UserRequestDTO userRequestDTO) {
-        return null;
+        try {
+            if (token == null) {
+                return "redirect:/error/401";
+            } else {
+                redirectAttributes.addFlashAttribute("", "");
+                return null;
+            }
+        } catch (HttpClientErrorException.Forbidden exf) {
+            return "redirect:/error/403";
+        } catch (HttpClientErrorException.Unauthorized exu) {
+            return "redirect:/error/401";
+        }
     }
 
     // IN PROGRESS
     @PostMapping("users/update")
-    public String userUpdate(@CookieValue(name = "token") String token, RedirectAttributes redirectAttributes,
+    public String userUpdate(@CookieValue(name = "token") String token,
+                             RedirectAttributes redirectAttributes,
                              @ModelAttribute("userRequestDTO") UserRequestDTO userRequestDTO) {
-        return null;
+        try {
+            if (token == null) {
+                return "redirect:/error/401";
+            } else {
+                redirectAttributes.addFlashAttribute("", "");
+                return null;
+            }
+        } catch (HttpClientErrorException.Forbidden exf) {
+            return "redirect:/error/403";
+        } catch (HttpClientErrorException.Unauthorized exu) {
+            return "redirect:/error/401";
+        }
     }
 
     // IN PROGRESS
     @PostMapping("users/remove")
-    public String userRemove(@CookieValue(name = "token") String token, RedirectAttributes redirectAttributes,
+    public String userRemove(@CookieValue(name = "token") String token,
+                             RedirectAttributes redirectAttributes,
                              @ModelAttribute("userRequestDTO") UserRequestDTO userRequestDTO) {
-        return null;
+        try {
+            if (token == null) {
+                return "redirect:/error/401";
+            } else {
+                redirectAttributes.addFlashAttribute("", "");
+                return null;
+            }
+        } catch (HttpClientErrorException.Forbidden exf) {
+            return "redirect:/error/403";
+        } catch (HttpClientErrorException.Unauthorized exu) {
+            return "redirect:/error/401";
+        }
     }
 
     // DONE
@@ -109,7 +150,8 @@ public class BaseAdminController {
 
     // DONE
     @PostMapping("branches/add")
-    public String branchAdd(@CookieValue(name = "token") String token, RedirectAttributes redirectAttributes,
+    public String branchAdd(@CookieValue(name = "token") String token,
+                            RedirectAttributes redirectAttributes,
                             @ModelAttribute("branchRequestDTO") BranchRequestDTO branchRequestDTO) {
         try {
             if (token == null) {
@@ -133,7 +175,8 @@ public class BaseAdminController {
 
     // DONE
     @PostMapping("branches/edit")
-    public String branchEdit(@CookieValue(name = "token") String token, RedirectAttributes redirectAttributes,
+    public String branchEdit(@CookieValue(name = "token") String token,
+                             RedirectAttributes redirectAttributes,
                              @ModelAttribute("branchRequestDTO") BranchRequestDTO branchRequestDTO) {
         try {
             if (token == null) {
@@ -157,7 +200,8 @@ public class BaseAdminController {
 
     // DONE
     @PostMapping("/branches/delete")
-    public String branchDelete(@CookieValue(name = "token") String token, RedirectAttributes redirectAttributes,
+    public String branchDelete(@CookieValue(name = "token") String token,
+                               RedirectAttributes redirectAttributes,
                                @ModelAttribute("branchRequestDTO") BranchRequestDTO branchRequestDTO) {
         try {
             if (token == null) {
@@ -181,7 +225,8 @@ public class BaseAdminController {
 
     // DONE
     @PostMapping("users/{id}/block")
-    public String blockUser(@CookieValue(name = "token") String token, @ModelAttribute("id") UserRequestDTO userRequestDTO,
+    public String blockUser(@CookieValue(name = "token") String token,
+                            @ModelAttribute("id") UserRequestDTO userRequestDTO,
                             RedirectAttributes redirectAttributes, HttpServletRequest request) {
         try {
             if (token == null) {
@@ -205,7 +250,8 @@ public class BaseAdminController {
 
     // DONE
     @PostMapping("users/{id}/unblock")
-    public String unblockUser(@CookieValue(name = "token") String token, @ModelAttribute("id") UserRequestDTO userRequestDTO,
+    public String unblockUser(@CookieValue(name = "token") String token,
+                              @ModelAttribute("id") UserRequestDTO userRequestDTO,
                               RedirectAttributes redirectAttributes, HttpServletRequest request) {
         try {
             if (token == null) {
@@ -243,6 +289,96 @@ public class BaseAdminController {
                                            @ModelAttribute("branchRequestDTO") BranchRequestDTO branchRequestDTO) {
         BranchResponseMessageDTO feedback = adminService.getBranchById(token, branchRequestDTO);
         return feedback.getData();
+    }
+
+    // DONE
+    @GetMapping("orders")
+    public String getOrdersPage(@CookieValue(name = "token") String token, Model model,
+                                @RequestParam(defaultValue = "0") int page,
+                                @RequestParam(defaultValue = "", required = false) Long number,
+                                @RequestParam(defaultValue = "", required = false) String branch) {
+        try {
+            if (token == null) {
+                return "redirect:/error/401";
+            } else {
+                ListOrderResponseMessageDTO feedback = controlService.getAllActiveOrders(token, page, number, branch);
+                if (feedback.getStatus().equals("ERROR")) {
+                    model.addAttribute("orderError", true);
+                    model.addAttribute("feedback", feedback.getMessage());
+                } else {
+                    model.addAttribute("orders", feedback.getData());
+                }
+                model.addAttribute("branch", branch);
+                model.addAttribute("branches", generalService.getBranchNames(token).getData());
+                model.addAttribute("currentPage", page);
+                model.addAttribute("totalPages", feedback.getTotalPages() - 1);
+                String role = generalService.getRoleByToken(token);
+                if (role.equals("Администратор")) {
+                    return "admin/order/orders";
+                } else if (role.equals("Сотрудник банка")) {
+                    return "bank/order/orders";
+                } else {
+                    return "redirect:/error/403";
+                }
+            }
+        } catch (HttpClientErrorException.Forbidden exf) {
+            return "redirect:/error/403";
+        } catch (HttpClientErrorException.Unauthorized exu) {
+            return "redirect:/error/401";
+        }
+    }
+
+    // DONE
+    @GetMapping("story")
+    public String getOrdersStoryPage(@CookieValue(name = "token") String token, Model model,
+                                     @RequestParam(defaultValue = "0") int page,
+                                     @RequestParam(defaultValue = "", required = false) Long number,
+                                     @RequestParam(defaultValue = "", required = false) String branch,
+                                     @RequestParam(defaultValue = "", required = false) Long courier) {
+        try {
+            if (token == null) {
+                return "redirect:/error/401";
+            } else {
+                ListOrderStoryResponseMessageDTO feedback = controlService.getAllOrderStory(token, page, number, branch, courier);
+                if (feedback.getStatus().equals("ERROR")) {
+                    model.addAttribute("storyError", true);
+                    model.addAttribute("feedback", feedback.getMessage());
+                } else {
+                    model.addAttribute("stories", feedback.getData());
+                }
+                model.addAttribute("currentPage", page);
+                model.addAttribute("totalPages", feedback.getTotalPages() - 1);
+                model.addAttribute("courier", courier);
+                model.addAttribute("couriers", generalService.getCouriers(token).getData());
+                model.addAttribute("branch", branch);
+                model.addAttribute("branches", generalService.getBranchNames(token).getData());
+                return "admin/story/stories";
+            }
+        } catch (HttpClientErrorException.Forbidden exf) {
+            return "redirect:/error/403";
+        } catch (HttpClientErrorException.Unauthorized exu) {
+            return "redirect:/error/401";
+        }
+    }
+
+    // DONE
+    @GetMapping("statistics")
+    public String getStatisticsPage(@CookieValue(name = "token") String token, Model model,
+                                    @RequestParam(defaultValue = "", required = false) String branch,
+                                    @RequestParam(defaultValue = "", required = false) String period) {
+        try {
+            if (token == null) {
+                return "redirect:/error/401";
+            } else {
+                BranchEmployeeController.reportModel(token, model, branch, period, controlService.getStatistics(token), generalService);
+                model.addAttribute("branches", generalService.getBranchNames(token).getData());
+                return "admin/statistics/statistics";
+            }
+        } catch (HttpClientErrorException.Forbidden exf) {
+            return "redirect:/error/403";
+        } catch (HttpClientErrorException.Unauthorized exu) {
+            return "redirect:/error/401";
+        }
     }
 
     // DONE

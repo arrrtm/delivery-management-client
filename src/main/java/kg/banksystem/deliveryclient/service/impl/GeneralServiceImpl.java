@@ -1,14 +1,12 @@
 package kg.banksystem.deliveryclient.service.impl;
 
 import kg.banksystem.deliveryclient.dto.account.response.RoleResponseMessageDTO;
-import kg.banksystem.deliveryclient.dto.admin.response.BranchStatisticResponseMessageDTO;
+import kg.banksystem.deliveryclient.dto.admin.response.BranchReportResponseMessageDTO;
 import kg.banksystem.deliveryclient.dto.admin.response.ListUserResponseMessageDTO;
 import kg.banksystem.deliveryclient.dto.baseresponse.SimpleListResponseMessageDTO;
 import kg.banksystem.deliveryclient.dto.baseresponse.SimpleResponseMessageDTO;
 import kg.banksystem.deliveryclient.dto.branch.request.OrderRequestDTO;
 import kg.banksystem.deliveryclient.dto.branch.request.OrderStoryRequestDTO;
-import kg.banksystem.deliveryclient.dto.branch.response.ListOrderResponseMessageDTO;
-import kg.banksystem.deliveryclient.dto.branch.response.ListOrderStoryResponseMessageDTO;
 import kg.banksystem.deliveryclient.dto.branch.response.OrderResponseMessageDTO;
 import kg.banksystem.deliveryclient.dto.branch.response.OrderStoryResponseMessageDTO;
 import kg.banksystem.deliveryclient.service.GeneralService;
@@ -21,7 +19,7 @@ import java.util.Objects;
 @Service
 public class GeneralServiceImpl implements GeneralService {
 
-    public static final String ADDRESS_ALL = "http://localhost:8888/api/all/";
+    public static final String ADDRESS_ALL = "http://localhost:5000/api/all/";
 
     @Override
     public String getRoleByToken(String token) {
@@ -43,44 +41,6 @@ public class GeneralServiceImpl implements GeneralService {
         HttpEntity<?> entity = new HttpEntity<>(headers);
         ResponseEntity<SimpleResponseMessageDTO> response = restTemplate.exchange(ADDRESS_ALL + "get/name", HttpMethod.POST, entity, SimpleResponseMessageDTO.class);
         return Objects.requireNonNull(response.getBody()).getData();
-    }
-
-    @Override
-    public ListOrderResponseMessageDTO getAllActiveOrders(String token, int page, Long number, String branch) {
-        RestTemplate restTemplate = new RestTemplate();
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.add("Authorization", "Bearer " + token);
-        HttpEntity<?> entity = new HttpEntity<>(headers);
-        ResponseEntity<ListOrderResponseMessageDTO> response;
-        if (number != null) {
-            response = restTemplate.exchange(ADDRESS_ALL + "orders?page=0&orderNumber=" + number, HttpMethod.POST, entity, ListOrderResponseMessageDTO.class);
-        } else if (!branch.isEmpty()) {
-            response = restTemplate.exchange(ADDRESS_ALL + "orders?page=" + page + "&branchName=" + branch, HttpMethod.POST, entity, ListOrderResponseMessageDTO.class);
-        } else {
-            response = restTemplate.exchange(ADDRESS_ALL + "orders?page=" + page, HttpMethod.POST, entity, ListOrderResponseMessageDTO.class);
-        }
-        return response.getBody();
-    }
-
-    @Override
-    public ListOrderStoryResponseMessageDTO getAllOrderStory(String token, int page, Long number, String branch, Long courier) {
-        RestTemplate restTemplate = new RestTemplate();
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.add("Authorization", "Bearer " + token);
-        HttpEntity<?> entity = new HttpEntity<>(headers);
-        ResponseEntity<ListOrderStoryResponseMessageDTO> response;
-        if (number != null) {
-            response = restTemplate.exchange(ADDRESS_ALL + "story?page=0&orderNumber=" + number, HttpMethod.POST, entity, ListOrderStoryResponseMessageDTO.class);
-        } else if (courier != null) {
-            response = restTemplate.exchange(ADDRESS_ALL + "story?page=" + page + "&courierId=" + courier, HttpMethod.POST, entity, ListOrderStoryResponseMessageDTO.class);
-        } else if (!branch.isEmpty()) {
-            response = restTemplate.exchange(ADDRESS_ALL + "story?page=" + page + "&branchName=" + branch, HttpMethod.POST, entity, ListOrderStoryResponseMessageDTO.class);
-        } else {
-            response = restTemplate.exchange(ADDRESS_ALL + "story?page=" + page, HttpMethod.POST, entity, ListOrderStoryResponseMessageDTO.class);
-        }
-        return response.getBody();
     }
 
     @Override
@@ -128,13 +88,13 @@ public class GeneralServiceImpl implements GeneralService {
     }
 
     @Override
-    public BranchStatisticResponseMessageDTO getStatistics(String token) {
+    public BranchReportResponseMessageDTO getReport(String token, String branch, String period) {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.add("Authorization", "Bearer " + token);
         HttpEntity<?> entity = new HttpEntity<>(headers);
-        ResponseEntity<BranchStatisticResponseMessageDTO> response = restTemplate.exchange(ADDRESS_ALL + "statistic", HttpMethod.POST, entity, BranchStatisticResponseMessageDTO.class);
+        ResponseEntity<BranchReportResponseMessageDTO> response = restTemplate.exchange(ADDRESS_ALL + ("report?branchName=" + branch + "&period=" + period), HttpMethod.POST, entity, BranchReportResponseMessageDTO.class);
         return response.getBody();
     }
 }

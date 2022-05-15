@@ -15,7 +15,7 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class AdminServiceImpl implements AdminService {
 
-    public static final String ADDRESS_ADMIN = "http://localhost:8888/api/admin/";
+    public static final String ADDRESS_ADMIN = "http://localhost:5000/api/admin/";
 
     @Override
     public ListUserResponseMessageDTO getAllUsers(String token, int page) {

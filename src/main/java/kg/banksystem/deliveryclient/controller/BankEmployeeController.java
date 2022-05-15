@@ -169,21 +169,54 @@ public class BankEmployeeController {
     @PostMapping("orders/add")
     public String orderAdd(@CookieValue(name = "token") String token, RedirectAttributes redirectAttributes,
                            @ModelAttribute("orderRequestDTO") OrderRequestDTO orderRequestDTO) {
-        return null;
+        try {
+            if (token == null) {
+                return "redirect:/error/401";
+            } else {
+                redirectAttributes.addFlashAttribute("", "");
+                return null;
+            }
+        } catch (HttpClientErrorException.Forbidden exf) {
+            return "redirect:/error/403";
+        } catch (HttpClientErrorException.Unauthorized exu) {
+            return "redirect:/error/401";
+        }
     }
 
     // IN PROGRESS
     @PostMapping("orders/edit")
     public String orderEdit(@CookieValue(name = "token") String token, RedirectAttributes redirectAttributes,
                             @ModelAttribute("orderRequestDTO") OrderRequestDTO orderRequestDTO) {
-        return null;
+        try {
+            if (token == null) {
+                return "redirect:/error/401";
+            } else {
+                redirectAttributes.addFlashAttribute("", "");
+                return null;
+            }
+        } catch (HttpClientErrorException.Forbidden exf) {
+            return "redirect:/error/403";
+        } catch (HttpClientErrorException.Unauthorized exu) {
+            return "redirect:/error/401";
+        }
     }
 
     // IN PROGRESS
     @PostMapping("orders/delete")
     public String orderDelete(@CookieValue(name = "token") String token, RedirectAttributes redirectAttributes,
                               @ModelAttribute("clientRequestDTO") ClientRequestDTO clientRequestDTO) {
-        return null;
+        try {
+            if (token == null) {
+                return "redirect:/error/401";
+            } else {
+                redirectAttributes.addFlashAttribute("", "");
+                return null;
+            }
+        } catch (HttpClientErrorException.Forbidden exf) {
+            return "redirect:/error/403";
+        } catch (HttpClientErrorException.Unauthorized exu) {
+            return "redirect:/error/401";
+        }
     }
 
     // DONE

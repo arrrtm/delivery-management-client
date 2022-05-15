@@ -11,7 +11,7 @@ import org.springframework.web.client.RestTemplate;
 public class AuthenticationServiceImpl implements AuthenticationService {
 
     public static final String COOKIE_NAME = "token";
-    public static final String ADDRESS_AUTH = "http://localhost:8888/api/auth/";
+    public static final String ADDRESS_AUTH = "http://localhost:5000/api/auth/";
 
     @Override
     public TokenResponseMessageDTO getAuthentication(AuthenticationRequestDTO authenticationRequestDTO) {

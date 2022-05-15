@@ -1,12 +1,16 @@
 package kg.banksystem.deliveryclient.controller;
 
+import kg.banksystem.deliveryclient.dto.admin.response.BranchReportResponseMessageDTO;
+import kg.banksystem.deliveryclient.dto.admin.response.BranchStatisticResponseMessageDTO;
 import kg.banksystem.deliveryclient.dto.baseresponse.LogicalResponseMessageDTO;
 import kg.banksystem.deliveryclient.dto.baseresponse.SimpleResponseMessageDTO;
 import kg.banksystem.deliveryclient.dto.branch.request.OrderRequestDTO;
 import kg.banksystem.deliveryclient.dto.branch.request.OrderStatusRequestDTO;
+import kg.banksystem.deliveryclient.dto.branch.response.BranchCourierResponseMessageDTO;
 import kg.banksystem.deliveryclient.dto.branch.response.ListOrderResponseMessageDTO;
 import kg.banksystem.deliveryclient.dto.branch.response.ListOrderStoryResponseMessageDTO;
 import kg.banksystem.deliveryclient.service.BranchService;
+import kg.banksystem.deliveryclient.service.GeneralService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,10 +22,32 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class BranchEmployeeController {
 
     private final BranchService branchService;
+    private final GeneralService generalService;
 
     @Autowired
-    public BranchEmployeeController(BranchService branchService) {
+    public BranchEmployeeController(BranchService branchService, GeneralService generalService) {
         this.branchService = branchService;
+        this.generalService = generalService;
+    }
+
+    // DONE
+    static void reportModel(@CookieValue(name = "token") String token, Model model,
+                            @RequestParam(defaultValue = "", required = false) String branch,
+                            @RequestParam(defaultValue = "", required = false) String period,
+                            BranchStatisticResponseMessageDTO statistics,
+                            GeneralService generalService) {
+        if (statistics.getStatus().equals("ERROR")) {
+            model.addAttribute("statisticsError", true);
+            model.addAttribute("feedback", statistics.getMessage());
+        } else {
+            model.addAttribute("statistics", statistics.getData());
+            BranchReportResponseMessageDTO feedbackReport = generalService.getReport(token, branch, period);
+            if (feedbackReport.getStatus().equals("SUCCESS")) {
+                model.addAttribute("reportSuccess", true);
+                model.addAttribute("feedbackReport", feedbackReport.getMessage());
+                model.addAttribute("report", feedbackReport.getData());
+            }
+        }
     }
 
     // DONE
@@ -117,7 +143,6 @@ public class BranchEmployeeController {
         }
     }
 
-
     // DONE
     @PostMapping("change/ready-from-delivery")
     public String changeStatusReadyFromDelivery(@CookieValue(name = "token") String token, RedirectAttributes redirectAttributes,
@@ -197,18 +222,56 @@ public class BranchEmployeeController {
         }
     }
 
-    // IN PROGRESS
+    // DONE
     @GetMapping("statistics/branch")
-    public String getStatisticsForBranchPage(@CookieValue(name = "token") String token, Model model) {
-        model.addAttribute("couriers", branchService.getCouriersByBranch(token).getData());
-        return "branch/statistics/statistics";
+    public String getStatisticsForBranchPage(@CookieValue(name = "token") String token, Model model,
+                                             @RequestParam(defaultValue = "", required = false) String period) {
+        try {
+            if (token == null) {
+                return "redirect:/error/401";
+            } else {
+                SimpleResponseMessageDTO branchName = branchService.getBranchByToken(token);
+                String branch = branchName.getData();
+                reportModel(token, model, branch, period, branchService.getStatistics(token), generalService);
+                return "branch/statistics/statistics";
+            }
+        } catch (HttpClientErrorException.Forbidden exf) {
+            return "redirect:/error/403";
+        } catch (HttpClientErrorException.Unauthorized exu) {
+            return "redirect:/error/401";
+        }
     }
 
-    // IN PROGRESS
+    // DONE
     @GetMapping("statistics/branch/couriers")
-    public String getStatisticsForBranchByCouriersPage(@CookieValue(name = "token") String token, Model model) {
-        model.addAttribute("couriers", branchService.getCouriersByBranch(token).getData());
-        return "branch/statistics/couriers";
+    public String getStatisticsForBranchByCouriersPage(@CookieValue(name = "token") String token, Model model,
+                                                       @RequestParam(defaultValue = "", required = false) String period) {
+        try {
+            if (token == null) {
+                return "redirect:/error/401";
+            } else {
+                SimpleResponseMessageDTO branchName = branchService.getBranchByToken(token);
+                String branch = branchName.getData();
+                BranchCourierResponseMessageDTO statistics = branchService.getCourierStatistics(token);
+                if (statistics.getStatus().equals("ERROR")) {
+                    model.addAttribute("statisticsError", true);
+                    model.addAttribute("feedback", statistics.getMessage());
+                } else {
+                    model.addAttribute("couriers", statistics.getData());
+                    BranchReportResponseMessageDTO feedbackReport = generalService.getReport(token, branch, period);
+                    if (feedbackReport.getStatus().equals("SUCCESS")) {
+                        model.addAttribute("reportSuccess", true);
+                        model.addAttribute("feedbackReport", feedbackReport.getMessage());
+                        model.addAttribute("report", feedbackReport.getData());
+                    }
+                }
+                return "branch/statistics/couriers";
+            }
+        } catch (HttpClientErrorException.Forbidden exf) {
+            return "redirect:/error/403";
+        } catch (HttpClientErrorException.Unauthorized exu) {
+            return "redirect:/error/401";
+        }
     }
 
     // DONE

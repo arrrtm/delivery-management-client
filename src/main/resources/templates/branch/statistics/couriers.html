@@ -3,6 +3,7 @@
 <head>
     <title>Статистика по курьерам филиала</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.2/xlsx.full.min.js"></script>
     <div th:insert="main :: head"></div>
 </head>
 
@@ -19,13 +20,6 @@
             <div class="row">
                 <form th:action="@{/statistics/branch/couriers}" method="GET">
                     <label>
-                        <select id="courier" name="courier" class="form-select form-select-sm">
-                            <option selected disabled>Выберите курьера</option>
-                            <option th:each="courier : ${couriers}" th:value="${courier.id}"
-                                    th:text="${courier.userFullName}"></option>
-                        </select>
-                    </label>
-                    <label>
                         <select id="period" name="period" class="form-select form-select-sm">
                             <option selected disabled>Выберите период</option>
                             <option>За неделю</option>
@@ -33,12 +27,65 @@
                             <option>За год</option>
                         </select>
                     </label>
-                    <button class="btn btn-danger btn-sm mt-1 mb-2" type="submit">Полный отчёт в Excel за указанный
-                        период &raquo;
+                    <button id="export_button" class="btn alert-danger btn-sm mt-1 mb-2" type="submit">Полный отчёт в
+                        Excel за указанный
+                        период по филиалу &raquo;
                     </button>
                 </form>
             </div>
+            <div class="alert alert-info text-sm-center mb-1" th:if="${reportSuccess == true}"
+                 th:text="${feedbackReport}"></div>
         </div>
+        <table id="report_data" class="table table-hover d-none">
+            <thead>
+            <tr>
+                <th scope="col">Номер заказа</th>
+                <th scope="col">Адрес взятия карты</th>
+                <th scope="col">Адрес доставки карты</th>
+                <th scope="col">Тип доставки</th>
+                <th scope="col">Текущий статус заказа</th>
+                <th scope="col">Дата создания заказа</th>
+                <th scope="col">Тип карты</th>
+                <th scope="col">Описание карты</th>
+                <th scope="col">ПИН клиента</th>
+                <th scope="col">ФИО клиента</th>
+                <th scope="col">Номер телефона клиента</th>
+                <th scope="col">Доставка завершена?</th>
+                <th scope="col">ФИО курьера</th>
+                <th scope="col">Номер телефона курьера</th>
+                <th scope="col">Электронная почта курьера</th>
+                <th scope="col">Дата завершения заказа</th>
+                <th scope="col">Статус крайнего завершения заказа</th>
+                <th scope="col">Комментарий при крайнем завершении заказа</th>
+                <th scope="col">Наименование филиала</th>
+                <th scope="col">Адрес филиала</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="rep : ${report}">
+                <td th:text="${rep.orderNumber}"></td>
+                <td th:text="${rep.addressPickup}"></td>
+                <td th:text="${rep.addressDelivery}"></td>
+                <td th:text="${rep.typeDelivery}"></td>
+                <td th:text="${rep.orderStatus}"></td>
+                <td th:text="${rep.orderCreated}"></td>
+                <td th:text="${rep.cardType}"></td>
+                <td th:text="${rep.cardDescription}"></td>
+                <td th:text="${rep.clientPin}"></td>
+                <td th:text="${rep.clientFullName}"></td>
+                <td th:text="${rep.clientPhoneNumber}"></td>
+                <td th:text="${rep.completedStoryNumber}"></td>
+                <td th:text="${rep.userFullName}"></td>
+                <td th:text="${rep.userPhoneNumber}"></td>
+                <td th:text="${rep.userEmail}"></td>
+                <td th:text="${rep.orderCompleted}"></td>
+                <td th:text="${rep.storyStatus}"></td>
+                <td th:text="${rep.storyComment}"></td>
+                <td id="branchName" th:text="${rep.branchName}"></td>
+                <td th:text="${rep.branchAddress}"></td>
+            </tr>
+            </tbody>
+        </table>
     </div>
 </div>
 <hr>
@@ -56,13 +103,13 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="statistic : ${statistics}">
-            <td th:text="${statistic.totalCountOfOrdersActive}"></td>
-            <td th:text="${statistic.totalCountOfOrdersComplete}"></td>
-            <td th:text="${statistic.totalCountOfCouriersActive}"></td>
-            <td th:text="${statistic.totalCountOfCouriersInactive}"></td>
-            <td th:text="${statistic.countOfCompletedOrdersPerWeek}"></td>
-            <td th:text="${statistic.countOfCompletedOrdersPerMonth}"></td>
+        <tr th:each="courier : ${couriers}">
+            <td th:text="${courier.courierFullName}"></td>
+            <td th:text="${courier.courierPhoneNumber}"></td>
+            <td th:text="${courier.countOfCompletedOrdersPerDay}"></td>
+            <td th:text="${courier.countOfCompletedOrdersPerWeek}"></td>
+            <td th:text="${courier.countOfCompletedOrdersPerMonth}"></td>
+            <td th:text="${courier.lastOrderDate}"></td>
         </tr>
         </tbody>
     </table>
@@ -72,4 +119,25 @@
 <br>
 <div th:insert="main :: footer"></div>
 </body>
+
+<script type="text/javascript">
+    function html_table_to_excel(type) {
+        const data = document.getElementById('report_data');
+        let file = XLSX.utils.table_to_book(data, {sheet: document.getElementById('branchName').innerText});
+        XLSX.write(file, {bookType: type, bookSST: true, type: 'base64'});
+        XLSX.writeFile(file, document.getElementById('branchName').innerText + " " + new Date() + '.' + type);
+    }
+
+    const export_button = document.getElementById('export_button');
+    export_button.addEventListener('dblclick', () => {
+        html_table_to_excel('xlsx');
+    });
+
+    let event = new MouseEvent('dblclick', {
+        'view': window,
+        'bubbles': true,
+        'cancelable': true,
+    });
+    document.getElementById('export_button').dispatchEvent(event);
+</script>
 </html>

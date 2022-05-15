@@ -12,7 +12,7 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class AccountServiceImpl implements AccountService {
 
-    public static final String ADDRESS_ACCOUNT = "http://localhost:8888/api/account/";
+    public static final String ADDRESS_ACCOUNT = "http://localhost:5000/api/account/";
 
     @Override
     public UserResponseMessageDTO viewPersonalArea(String token) {

@@ -16,7 +16,7 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class BankServiceImpl implements BankService {
 
-    public static final String ADDRESS_BANK = "http://localhost:8888/api/bank/";
+    public static final String ADDRESS_BANK = "http://localhost:5000/api/bank/";
 
     @Override
     public ListUserResponseMessageDTO getAllUsers(String token, UsersWithRoleRequestDTO users, int page) {
