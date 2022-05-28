@@ -20,7 +20,7 @@
                 <ul class="nav nav-pills">
                     <li class="nav-item border border-light rounded"
                         th:each="page : ${#numbers.sequence(0, totalPages)}">
-                        <a th:href="@{/users/(page=${page})}" th:text="${page}" class="nav-link text-dark"
+                        <a th:href="@{/users/employees(page=${page})}" th:text="${page}" class="nav-link text-dark"
                            th:classappend="(${currentPage}==${page}?'active bg-danger text-white':'')">
                         </a>
                     </li>
@@ -89,7 +89,7 @@
 <br>
 
 <div th:insert="main :: footer"></div>
-<div th:insert="bank/user/add :: addUser"></div>
-<div th:insert="bank/user/edit :: editUser"></div>
+<div th:insert="admin/user/add :: addUser"></div>
+<div th:insert="admin/user/edit :: editUser"></div>
 </body>
 </html>

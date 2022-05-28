@@ -77,7 +77,7 @@
             <td>
                 <div class="container d-flex flex-row bd-highlight justify-content-center">
                     <div class="row">
-                        <div class="col-sm me-2 pt-0 p-lg-0">
+                        <div class="col-sm me-2 pt-0 p-lg-0" th:if="${order.status == 'Заказ взят курьером' }">
                             <a th:href="@{qr/(id=${order.id})}"
                                class="btn btn-link btn-sm text-input-dialog ps-0 pe-0">
                                 <div th:insert="svg :: qr"></div>

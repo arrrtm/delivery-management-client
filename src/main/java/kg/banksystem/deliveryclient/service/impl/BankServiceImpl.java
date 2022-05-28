@@ -2,6 +2,7 @@ package kg.banksystem.deliveryclient.service.impl;
 
 import kg.banksystem.deliveryclient.dto.admin.response.ListUserResponseMessageDTO;
 import kg.banksystem.deliveryclient.dto.bank.request.ClientRequestDTO;
+import kg.banksystem.deliveryclient.dto.bank.request.OrderOperationsRequestDTO;
 import kg.banksystem.deliveryclient.dto.bank.request.UsersWithRoleRequestDTO;
 import kg.banksystem.deliveryclient.dto.bank.response.ClientResponseMessageDTO;
 import kg.banksystem.deliveryclient.dto.bank.response.ListClientResponseMessageDTO;
@@ -84,22 +85,37 @@ public class BankServiceImpl implements BankService {
         return response.getBody();
     }
 
-    // IN PROGRESS
     @Override
-    public SimpleResponseMessageDTO addOrder(String token, OrderRequestDTO orderRequestDTO) {
-        return null;
+    public SimpleResponseMessageDTO addOrder(String token, OrderOperationsRequestDTO orderOperationsRequestDTO) {
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.add("Authorization", "Bearer " + token);
+        HttpEntity<?> entity = new HttpEntity<>(orderOperationsRequestDTO, headers);
+        ResponseEntity<SimpleResponseMessageDTO> response = restTemplate.exchange(ADDRESS_BANK + "orders/add", HttpMethod.POST, entity, SimpleResponseMessageDTO.class);
+        return response.getBody();
     }
 
-    // IN PROGRESS
     @Override
-    public SimpleResponseMessageDTO editOrder(String token, OrderRequestDTO orderRequestDTO) {
-        return null;
+    public SimpleResponseMessageDTO editOrder(String token, OrderOperationsRequestDTO orderOperationsRequestDTO) {
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.add("Authorization", "Bearer " + token);
+        HttpEntity<?> entity = new HttpEntity<>(orderOperationsRequestDTO, headers);
+        ResponseEntity<SimpleResponseMessageDTO> response = restTemplate.exchange(ADDRESS_BANK + "orders/edit", HttpMethod.POST, entity, SimpleResponseMessageDTO.class);
+        return response.getBody();
     }
 
-    // IN PROGRESS
     @Override
-    public SimpleResponseMessageDTO deleteOrder(String token, OrderRequestDTO orderRequestDTO) {
-        return null;
+    public SimpleResponseMessageDTO deleteOrder(String token, OrderOperationsRequestDTO orderOperationsRequestDTO) {
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.add("Authorization", "Bearer " + token);
+        HttpEntity<?> entity = new HttpEntity<>(orderOperationsRequestDTO, headers);
+        ResponseEntity<SimpleResponseMessageDTO> response = restTemplate.exchange(ADDRESS_BANK + "orders/delete", HttpMethod.POST, entity, SimpleResponseMessageDTO.class);
+        return response.getBody();
     }
 
     @Override

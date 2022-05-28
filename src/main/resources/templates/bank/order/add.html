@@ -18,13 +18,37 @@
                     </div>
                     <div class="modal-body">
                         <div class="mb-3">
-                            <label for="addressPickup" class="col-form-label">Введите адрес взятия карты:</label>
-                            <input type="text" name="addressPickup" id="addressPickup" class="form-control" required>
+                            <label for="addressPickup" class="col-form-label">Укажите адрес филиала для вывоза:</label>
+                            <select id="addressPickup" name="addressPickup" class="form-select" required>
+                                <option th:each="branch : ${branches}" th:value="${branch.address}"
+                                        th:text="${branch.name} + ' - ' + ${branch.address} "></option>
+                            </select>
                         </div>
                         <div class="mb-3">
-                            <label for="addressDelivery" class="col-form-label">Введите адрес доставки карты:</label>
+                            <label for="addressDelivery" class="col-form-label">Введите адрес для доставки:</label>
                             <input type="text" name="addressDelivery" id="addressDelivery" class="form-control"
                                    required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="branch" class="col-form-label">Выберите филиал, где была заказана карта:</label>
+                            <select id="branch" name="branch" class="form-select" required>
+                                <option th:each="branch : ${branches}" th:value="${branch.id}"
+                                        th:text="${branch.name}"></option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="card" class="col-form-label">Выберите заказанную карту:</label>
+                            <select id="card" name="card" class="form-select" required>
+                                <option th:each="card : ${cards}" th:value="${card.id}"
+                                        th:text="${card.typeCard}"></option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="client" class="col-form-label">Выберите держателя карты:</label>
+                            <select id="client" name="client" class="form-select" required>
+                                <option th:each="client : ${clients}" th:value="${client.id}"
+                                        th:text="${client.clientPin} + ' - ' + ${client.clientFullName}"></option>
+                            </select>
                         </div>
                     </div>
                     <div class="modal-footer justify-content-center">

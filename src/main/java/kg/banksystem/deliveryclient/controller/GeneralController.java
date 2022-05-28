@@ -30,7 +30,6 @@ public class GeneralController {
         this.generalService = generalService;
     }
 
-    // DONE
     @GetMapping("home")
     public String getHomePage(HttpServletRequest request, Model model) {
         try {
@@ -60,7 +59,6 @@ public class GeneralController {
         }
     }
 
-    // DONE
     @GetMapping(value = {"orders/detail", "orders/orders/detail"})
     @ResponseBody
     public OrderResponseDTO getOrderById(@CookieValue(name = "token") String token, @ModelAttribute("orderRequestDTO") OrderRequestDTO orderRequestDTO) {
@@ -68,7 +66,6 @@ public class GeneralController {
         return feedback.getData();
     }
 
-    // DONE
     @GetMapping(value = {"story/detail", "story/story/detail"})
     @ResponseBody
     public OrderStoryResponseDTO getStoryById(@CookieValue(name = "token") String token, @ModelAttribute("orderStoryRequestDTO") OrderStoryRequestDTO orderStoryRequestDTO) {

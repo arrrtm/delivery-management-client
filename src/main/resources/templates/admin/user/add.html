@@ -18,6 +18,16 @@
                     </div>
                     <div class="modal-body">
                         <div class="mb-3">
+                            <label for="username" class="col-form-label">Введите логин пользователя:</label>
+                            <input type="text" name="username" id="username" class="form-control" required
+                                   autocomplete="off">
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="col-form-label">Введите пароль пользователя:</label>
+                            <input type="password" name="password" id="password" class="form-control" required
+                                   autocomplete="new-password">
+                        </div>
+                        <div class="mb-3">
                             <label for="userFullName" class="col-form-label">Введите ФИО пользователя:</label>
                             <input type="text" name="userFullName" id="userFullName" class="form-control" required>
                         </div>
@@ -25,8 +35,25 @@
                             <label for="userPhoneNumber" class="col-form-label">Введите номер телефона
                                 пользователя:</label>
                             <input type="text" name="userPhoneNumber" id="userPhoneNumber" class="form-control"
-                                   maxlength="10"
-                                   required oninput="this.value = this.value.replace(/\D/g, '')">
+                                   maxlength="10" required oninput="this.value = this.value.replace(/\D/g, '')">
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="col-form-label">Введите электронную почту пользователя:</label>
+                            <input type="email" name="email" id="email" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="role" class="col-form-label">Выберите роль пользователя в системе:</label>
+                            <select id="role" name="role" class="form-select" required>
+                                <option th:each="role : ${roles}" th:value="${role.id}" th:text="${role.name}"></option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="branches" class="col-form-label">Выберите филиал, к которому будет прикреплён
+                                пользователь:</label>
+                            <select id="branches" name="branches" class="form-select" required>
+                                <option th:each="branch : ${branches}" th:value="${branch.id}"
+                                        th:text="${branch.name}"></option>
+                            </select>
                         </div>
                     </div>
                     <div class="modal-footer justify-content-center">

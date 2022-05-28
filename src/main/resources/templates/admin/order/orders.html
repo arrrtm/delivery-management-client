@@ -45,7 +45,8 @@
                     <label>
                         <select id="branch" name="branch" class="form-select form-select-sm">
                             <option selected disabled>Выберите филиал</option>
-                            <option th:each="branch : ${branches}" th:value="${branch}" th:text="${branch}"></option>
+                            <option th:each="branch : ${branches}" th:value="${branch.id}"
+                                    th:text="${branch.name}"></option>
                         </select>
                     </label>
                     <button class="btn btn-danger btn-sm mt-1 mb-2" type="submit">Поиск по филиалу &raquo;</button>

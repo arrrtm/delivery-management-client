@@ -5,7 +5,6 @@ import kg.banksystem.deliveryclient.dto.admin.request.UserRequestDTO;
 import kg.banksystem.deliveryclient.dto.admin.response.BranchResponseMessageDTO;
 import kg.banksystem.deliveryclient.dto.admin.response.ListBranchResponseMessageDTO;
 import kg.banksystem.deliveryclient.dto.admin.response.ListUserResponseMessageDTO;
-import kg.banksystem.deliveryclient.dto.admin.response.UserResponseMessageDTO;
 import kg.banksystem.deliveryclient.dto.baseresponse.SimpleResponseMessageDTO;
 import kg.banksystem.deliveryclient.service.AdminService;
 import org.springframework.http.*;
@@ -29,32 +28,14 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public UserResponseMessageDTO getUserById(String token, UserRequestDTO userRequestDTO) {
+    public SimpleResponseMessageDTO removeUser(String token, UserRequestDTO userRequestDTO) {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.add("Authorization", "Bearer " + token);
         HttpEntity<?> entity = new HttpEntity<>(userRequestDTO, headers);
-        ResponseEntity<UserResponseMessageDTO> response = restTemplate.exchange(ADDRESS_ADMIN + "users/detail", HttpMethod.POST, entity, UserResponseMessageDTO.class);
+        ResponseEntity<SimpleResponseMessageDTO> response = restTemplate.exchange(ADDRESS_ADMIN + "users/remove", HttpMethod.POST, entity, SimpleResponseMessageDTO.class);
         return response.getBody();
-    }
-
-    // IN PROGRESS
-    @Override
-    public SimpleResponseMessageDTO registerUser(String token, UserRequestDTO userRequestDTO) {
-        return null;
-    }
-
-    // IN PROGRESS
-    @Override
-    public SimpleResponseMessageDTO updateUser(String token, UserRequestDTO userRequestDTO) {
-        return null;
-    }
-
-    // IN PROGRESS
-    @Override
-    public SimpleResponseMessageDTO removeUser(String token, UserRequestDTO userRequestDTO) {
-        return null;
     }
 
     @Override

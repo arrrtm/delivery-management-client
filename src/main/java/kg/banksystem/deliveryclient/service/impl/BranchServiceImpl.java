@@ -30,7 +30,7 @@ public class BranchServiceImpl implements BranchService {
         HttpEntity<?> entity = new HttpEntity<>(orderStatusRequestDTO, headers);
         ResponseEntity<ListOrderResponseMessageDTO> response;
         if (number != null) {
-            response = restTemplate.exchange(ADDRESS_BRANCH + "orders?page=0&orderNumber=" + number, HttpMethod.POST, entity, ListOrderResponseMessageDTO.class);
+            response = restTemplate.exchange(ADDRESS_BRANCH + "orders?page=0&order=" + number, HttpMethod.POST, entity, ListOrderResponseMessageDTO.class);
         } else {
             response = restTemplate.exchange(ADDRESS_BRANCH + "orders?page=" + page, HttpMethod.POST, entity, ListOrderResponseMessageDTO.class);
         }
@@ -68,9 +68,9 @@ public class BranchServiceImpl implements BranchService {
         HttpEntity<?> entity = new HttpEntity<>(headers);
         ResponseEntity<ListOrderStoryResponseMessageDTO> response;
         if (number != null) {
-            response = restTemplate.exchange(ADDRESS_BRANCH + "story?page=0&orderNumber=" + number, HttpMethod.POST, entity, ListOrderStoryResponseMessageDTO.class);
+            response = restTemplate.exchange(ADDRESS_BRANCH + "story?page=0&order=" + number, HttpMethod.POST, entity, ListOrderStoryResponseMessageDTO.class);
         } else if (courier != null) {
-            response = restTemplate.exchange(ADDRESS_BRANCH + "story?page=" + page + "&courierId=" + courier, HttpMethod.POST, entity, ListOrderStoryResponseMessageDTO.class);
+            response = restTemplate.exchange(ADDRESS_BRANCH + "story?page=" + page + "&courier=" + courier, HttpMethod.POST, entity, ListOrderStoryResponseMessageDTO.class);
         } else {
             response = restTemplate.exchange(ADDRESS_BRANCH + "story?page=" + page, HttpMethod.POST, entity, ListOrderStoryResponseMessageDTO.class);
         }

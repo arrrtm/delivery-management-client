@@ -1,8 +1,9 @@
 package kg.banksystem.deliveryclient.service;
 
 import kg.banksystem.deliveryclient.dto.admin.response.BranchReportResponseMessageDTO;
+import kg.banksystem.deliveryclient.dto.admin.response.ListBranchResponseMessageDTO;
+import kg.banksystem.deliveryclient.dto.admin.response.ListRoleResponseMessageDTO;
 import kg.banksystem.deliveryclient.dto.admin.response.ListUserResponseMessageDTO;
-import kg.banksystem.deliveryclient.dto.baseresponse.SimpleListResponseMessageDTO;
 import kg.banksystem.deliveryclient.dto.branch.request.OrderRequestDTO;
 import kg.banksystem.deliveryclient.dto.branch.request.OrderStoryRequestDTO;
 import kg.banksystem.deliveryclient.dto.branch.response.OrderResponseMessageDTO;
@@ -17,7 +18,9 @@ public interface GeneralService {
 
     OrderStoryResponseMessageDTO getStoryById(String token, OrderStoryRequestDTO orderStoryRequestDTO);
 
-    SimpleListResponseMessageDTO getBranchNames(String token);
+    ListBranchResponseMessageDTO getBranches(String token);
+
+    ListRoleResponseMessageDTO getRoles(String token);
 
     ListUserResponseMessageDTO getCouriers(String token);
 

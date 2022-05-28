@@ -2,8 +2,9 @@ package kg.banksystem.deliveryclient.service.impl;
 
 import kg.banksystem.deliveryclient.dto.account.response.RoleResponseMessageDTO;
 import kg.banksystem.deliveryclient.dto.admin.response.BranchReportResponseMessageDTO;
+import kg.banksystem.deliveryclient.dto.admin.response.ListBranchResponseMessageDTO;
+import kg.banksystem.deliveryclient.dto.admin.response.ListRoleResponseMessageDTO;
 import kg.banksystem.deliveryclient.dto.admin.response.ListUserResponseMessageDTO;
-import kg.banksystem.deliveryclient.dto.baseresponse.SimpleListResponseMessageDTO;
 import kg.banksystem.deliveryclient.dto.baseresponse.SimpleResponseMessageDTO;
 import kg.banksystem.deliveryclient.dto.branch.request.OrderRequestDTO;
 import kg.banksystem.deliveryclient.dto.branch.request.OrderStoryRequestDTO;
@@ -66,13 +67,24 @@ public class GeneralServiceImpl implements GeneralService {
     }
 
     @Override
-    public SimpleListResponseMessageDTO getBranchNames(String token) {
+    public ListBranchResponseMessageDTO getBranches(String token) {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.add("Authorization", "Bearer " + token);
         HttpEntity<?> entity = new HttpEntity<>(headers);
-        ResponseEntity<SimpleListResponseMessageDTO> response = restTemplate.exchange(ADDRESS_ALL + "branches", HttpMethod.POST, entity, SimpleListResponseMessageDTO.class);
+        ResponseEntity<ListBranchResponseMessageDTO> response = restTemplate.exchange(ADDRESS_ALL + "branches", HttpMethod.POST, entity, ListBranchResponseMessageDTO.class);
+        return response.getBody();
+    }
+
+    @Override
+    public ListRoleResponseMessageDTO getRoles(String token) {
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.add("Authorization", "Bearer " + token);
+        HttpEntity<?> entity = new HttpEntity<>(headers);
+        ResponseEntity<ListRoleResponseMessageDTO> response = restTemplate.exchange(ADDRESS_ALL + "roles", HttpMethod.POST, entity, ListRoleResponseMessageDTO.class);
         return response.getBody();
     }
 
@@ -94,7 +106,7 @@ public class GeneralServiceImpl implements GeneralService {
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.add("Authorization", "Bearer " + token);
         HttpEntity<?> entity = new HttpEntity<>(headers);
-        ResponseEntity<BranchReportResponseMessageDTO> response = restTemplate.exchange(ADDRESS_ALL + ("report?branchName=" + branch + "&period=" + period), HttpMethod.POST, entity, BranchReportResponseMessageDTO.class);
+        ResponseEntity<BranchReportResponseMessageDTO> response = restTemplate.exchange(ADDRESS_ALL + ("report?branch=" + branch + "&period=" + period), HttpMethod.POST, entity, BranchReportResponseMessageDTO.class);
         return response.getBody();
     }
 }

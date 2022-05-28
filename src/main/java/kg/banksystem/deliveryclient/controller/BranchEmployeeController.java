@@ -30,7 +30,6 @@ public class BranchEmployeeController {
         this.generalService = generalService;
     }
 
-    // DONE
     static void reportModel(@CookieValue(name = "token") String token, Model model,
                             @RequestParam(defaultValue = "", required = false) String branch,
                             @RequestParam(defaultValue = "", required = false) String period,
@@ -50,7 +49,6 @@ public class BranchEmployeeController {
         }
     }
 
-    // DONE
     @GetMapping("orders/new")
     public String getNewOrdersPageByBranch(@CookieValue(name = "token") String token, Model model,
                                            @RequestParam(defaultValue = "0") int page,
@@ -71,7 +69,6 @@ public class BranchEmployeeController {
         }
     }
 
-    // DONE
     @GetMapping("orders/active")
     public String getActiveOrdersPageByBranch(@CookieValue(name = "token") String token, Model model,
                                               @RequestParam(defaultValue = "0") int page,
@@ -92,7 +89,6 @@ public class BranchEmployeeController {
         }
     }
 
-    // DONE
     @GetMapping("orders/destroyed")
     public String getDestroyedOrdersPageByBranch(@CookieValue(name = "token") String token, Model model,
                                                  @RequestParam(defaultValue = "0") int page,
@@ -113,7 +109,6 @@ public class BranchEmployeeController {
         }
     }
 
-    // DONE
     @GetMapping("story/branch")
     public String getAllOrdersStoryForBranchPage(@CookieValue(name = "token") String token, Model model,
                                                  @RequestParam(defaultValue = "0") int page,
@@ -124,15 +119,7 @@ public class BranchEmployeeController {
                 return "redirect:/error/401";
             } else {
                 ListOrderStoryResponseMessageDTO feedback = branchService.getOrderStoryForBranch(token, page, number, courier);
-                if (feedback.getStatus().equals("ERROR")) {
-                    model.addAttribute("storyError", true);
-                    model.addAttribute("feedback", feedback.getMessage());
-                } else {
-                    model.addAttribute("stories", feedback.getData());
-                }
-                model.addAttribute("currentPage", page);
-                model.addAttribute("totalPages", feedback.getTotalPages() - 1);
-                model.addAttribute("courier", courier);
+                BaseAdminController.orderPages(model, page, courier, feedback);
                 model.addAttribute("couriers", branchService.getCouriersByBranch(token).getData());
                 return "branch/story/stories";
             }
@@ -143,7 +130,6 @@ public class BranchEmployeeController {
         }
     }
 
-    // DONE
     @PostMapping("change/ready-from-delivery")
     public String changeStatusReadyFromDelivery(@CookieValue(name = "token") String token, RedirectAttributes redirectAttributes,
                                                 @ModelAttribute("idNO") Long id) {
@@ -169,7 +155,6 @@ public class BranchEmployeeController {
         }
     }
 
-    // DONE
     @PostMapping("change/destroyed")
     public String changeStatusDestroyed(@CookieValue(name = "token") String token, RedirectAttributes redirectAttributes,
                                         @ModelAttribute("idAO") Long id) {
@@ -195,7 +180,6 @@ public class BranchEmployeeController {
         }
     }
 
-    // DONE
     @GetMapping("orders/qr")
     public String getQrForOrder(@CookieValue(name = "token") String token, Model model,
                                 @ModelAttribute("id") Long id) {
@@ -222,7 +206,6 @@ public class BranchEmployeeController {
         }
     }
 
-    // DONE
     @GetMapping("statistics/branch")
     public String getStatisticsForBranchPage(@CookieValue(name = "token") String token, Model model,
                                              @RequestParam(defaultValue = "", required = false) String period) {
@@ -242,7 +225,6 @@ public class BranchEmployeeController {
         }
     }
 
-    // DONE
     @GetMapping("statistics/branch/couriers")
     public String getStatisticsForBranchByCouriersPage(@CookieValue(name = "token") String token, Model model,
                                                        @RequestParam(defaultValue = "", required = false) String period) {
@@ -274,7 +256,6 @@ public class BranchEmployeeController {
         }
     }
 
-    // DONE
     private void baseBranchPages(@CookieValue(name = "token") String token, Model model,
                                  @RequestParam(defaultValue = "0") int page,
                                  @RequestParam(defaultValue = "", required = false) Long number,

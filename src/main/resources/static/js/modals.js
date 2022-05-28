@@ -1,4 +1,33 @@
 $(document).ready(function () {
+    $('.table .editUser, .table .deleteUser').on('click', function (event) {
+        event.preventDefault();
+        let href = $(this).attr('href');
+
+        $.get(href, function (user) {
+            $('.customForm #id').val(user.id);
+            $('.customForm #username').val(user.username);
+            $('.customForm #userFullName').val(user.userFullName);
+            $('.customForm #userPhoneNumber').val(user.userPhoneNumber);
+            $('.customForm #email').val(user.email);
+            $('.customForm #role').val(user.role.id);
+            $('.customForm #branches').val(user.branches[0].id);
+        });
+    });
+
+    $('.table .editOrder, .table .deleteOrder').on('click', function (event) {
+        event.preventDefault();
+        let href = $(this).attr('href');
+
+        $.get(href, function (order) {
+            $('.customForm #id').val(order.id);
+            $('.customForm #addressPickup').val(order.addressPickup);
+            $('.customForm #addressDelivery').val(order.addressDelivery);
+            $('.customForm #branch').val(order.branch.id);
+            $('.customForm #card').val(order.card.id);
+            $('.customForm #client').val(order.client.id);
+        });
+    });
+
     $('.table .editBranch, .table .deleteBranch').on('click', function (event) {
         event.preventDefault();
         let href = $(this).attr('href');
@@ -22,7 +51,7 @@ $(document).ready(function () {
         });
     });
 
-    $('.table .detailOrder, .table .editOrder, .table .deleteOrder, .table .destroyOrder, .table .sentOrder').on('click', function (event) {
+    $('.table .detailOrder, .table .destroyOrder, .table .sentOrder').on('click', function (event) {
         event.preventDefault();
         let href = $(this).attr('href');
 

@@ -2,6 +2,7 @@ package kg.banksystem.deliveryclient.service;
 
 import kg.banksystem.deliveryclient.dto.admin.response.ListUserResponseMessageDTO;
 import kg.banksystem.deliveryclient.dto.bank.request.ClientRequestDTO;
+import kg.banksystem.deliveryclient.dto.bank.request.OrderOperationsRequestDTO;
 import kg.banksystem.deliveryclient.dto.bank.request.UsersWithRoleRequestDTO;
 import kg.banksystem.deliveryclient.dto.bank.response.ClientResponseMessageDTO;
 import kg.banksystem.deliveryclient.dto.bank.response.ListClientResponseMessageDTO;
@@ -22,14 +23,11 @@ public interface BankService {
 
     SimpleResponseMessageDTO deleteClient(String token, ClientRequestDTO clientRequestDTO);
 
-    // IN PROGRESS
-    SimpleResponseMessageDTO addOrder(String token, OrderRequestDTO orderRequestDTO);
+    SimpleResponseMessageDTO addOrder(String token, OrderOperationsRequestDTO orderOperationsRequestDTO);
 
-    // IN PROGRESS
-    SimpleResponseMessageDTO editOrder(String token, OrderRequestDTO orderRequestDTO);
+    SimpleResponseMessageDTO editOrder(String token, OrderOperationsRequestDTO orderOperationsRequestDTO);
 
-    // IN PROGRESS
-    SimpleResponseMessageDTO deleteOrder(String token, OrderRequestDTO orderRequestDTO);
+    SimpleResponseMessageDTO deleteOrder(String token, OrderOperationsRequestDTO orderOperationsRequestDTO);
 
     LogicalResponseMessageDTO changeStatusSentToBranch(String token, OrderRequestDTO orderRequestDTO);
 }
